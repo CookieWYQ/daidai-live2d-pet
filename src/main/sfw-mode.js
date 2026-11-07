@@ -40,7 +40,8 @@ function sfwState(config, override) {
     forced: override === true || override === false ? override : null,
     // 用户持久化的选择（不受强制模式影响）
     savedNsfw: Boolean(config && config.nsfwMode === true),
-    blur: Math.min(40, Math.max(8, Number((config && config.sfwBlur) || 22)))
+    // SFW 默认更重的模糊（看不清人物细节）；可在 config.sfwBlur 8~72 调整
+    blur: Math.min(72, Math.max(8, Number((config && config.sfwBlur) || 42)))
   };
 }
 

@@ -341,6 +341,48 @@
     }).join("/");
   }
 
+  // 桌宠音效单通道：同一时刻只允许一个动作/点击原声，避免快速点击或状态切换时多个声音叠加。
+  // TTS 语音是独立通道，但播放新语音前也会停掉旧语音与动作音效。
+  let sfxAudio = null;
+  let lastClickSoundAt = 0;
+
+  function stopSfxAudio() {
+    if (!sfxAudio) return;
+    try { sfxAudio.pause(); sfxAudio.currentTime = 0; } catch (e) {}
+    sfxAudio = null;
+    window.__lastPetSoundPlaying = false;
+  }
+
+  function playSfxUrl(url, volume) {
+    if (!url) return false;
+    stopSfxAudio();
+    try {
+      var audio = new Audio(url);
+      audio.volume = typeof volume === "number" ? volume : 0.7;
+      sfxAudio = audio;
+      window.__lastPetSoundUrl = url;
+      window.__lastPetSoundPlaying = false;
+      window.__lastPetSoundError = "";
+      audio.addEventListener("playing", function() { if (sfxAudio === audio) window.__lastPetSoundPlaying = true; });
+      audio.addEventListener("error", function() { window.__lastPetSoundError = url; });
+      audio.addEventListener("ended", function() { if (sfxAudio === audio) { sfxAudio = null; window.__lastPetSoundPlaying = false; } });
+      audio.play().catch(function() { if (sfxAudio === audio) sfxAudio = null; });
+      return true;
+    } catch (e) {
+      sfxAudio = null;
+      return false;
+    }
+  }
+
+  // 切模型/退出前统一静音：动作原声 + TTS 语音都停，避免上一个模型的声音继续播
+  function stopAllPetAudio() {
+    stopSfxAudio();
+    if (tavernAudioEl) {
+      try { tavernAudioEl.pause(); tavernAudioEl.currentTime = 0; } catch (e) {}
+    }
+    stopLipSync();
+  }
+
   // 播放 links.json / model_info 里关联的原声；支持 file:// 绝对地址与相对模型目录的路径
   function playLinkedSound(linkOrSound) {
     try {
@@ -354,16 +396,7 @@
         url = /^(file|https?|data):/i.test(raw) ? raw : modelDirUrl() + encodeRelPath(raw);
       }
       if (!url) return false;
-      var audio = new Audio(url);
-      audio.volume = 0.75;
-      // 自检钩子：记录最近一次原声，便于自动化验证声音链路
-      window.__lastPetSoundUrl = url;
-      window.__lastPetSoundPlaying = false;
-      window.__lastPetSoundError = "";
-      audio.addEventListener("playing", function() { window.__lastPetSoundPlaying = true; });
-      audio.addEventListener("error", function() { window.__lastPetSoundError = url; });
-      audio.play().catch(function() {});
-      return true;
+      return playSfxUrl(url, 0.75);
     } catch (e) {
       return false;
     }
@@ -388,6 +421,10 @@
   // 点一下桌宠：从 links.json 里挑一条“动作+原声”，播放动作并同步播放原声
   function triggerPetClickInteraction() {
     if (!live2dModel) return;
+    // 连续快速点击只处理一次发声，避免多个原声叠在一起
+    var now = Date.now();
+    if (now - lastClickSoundAt < 260) return;
+    lastClickSoundAt = now;
     window.__petClicks = (window.__petClicks || 0) + 1;
     var candidates = (modelLinks || []).filter(function(link) { return link && link.sound; });
     if (!candidates.length) {
@@ -1405,7 +1442,27 @@
         modelName: (model && model.name) || (entry && entry.displayName) || loadedModelId || "",
         modelEntry: entry || {},
         motionMap: sceneMotionMap(),
-        models: (appState && appState.models) || [],
+        // 模型目录：带上用户可见名称/目录名/游戏，AI 才能把「k04_kijoui_ani」映射到模型 id
+        models: ((appState && appState.models) || []).map(function (item) {
+          var itemCatalog = catalogEntryForModel(item) || {};
+          return {
+            id: item.id,
+            name: item.name,
+            displayName: item.displayName,
+            modelDirName: item.modelDirName,
+            game: item.game,
+            kind: itemCatalog.kind || "",
+            nsfwOnly: Boolean(itemCatalog.nsfwOnly),
+            // 场景语义：用户常说“想看后背位/接吻/剖面”，而不是模型文件名
+            sceneLabel: itemCatalog.sceneLabel || "",
+            category: itemCatalog.category || "",
+            description: itemCatalog.description || "",
+            whenToUse: itemCatalog.whenToUse || "",
+            keywords: Array.isArray(itemCatalog.keywords) ? itemCatalog.keywords : []
+          };
+        }),
+        // 上一个模型：由主进程在每次切换时记录，支持“换回上一个”
+        previousModel: (appState && appState.previousModel) || null,
         // 场景目录：当前模型语义 + 63 个可切换场景（描述/whenToUse/NSFW）
         catalog: {
           path: (appState && appState.sceneCatalogPath) || "",
@@ -1476,6 +1533,19 @@
       return result;
     }, function(error) {
       return { ok: false, reason: "error", message: String((error && error.message) || error), sceneId: entry.modelId };
+    });
+  }
+
+  // 等待新模型加载完成：switch_model 工具返回前确认模型真的换上了，
+  // 同时确保新的能力清单（工具 schema / 上一个模型）已上报给主进程。
+  function waitForModelLoaded(modelId, timeoutMs) {
+    var started = Date.now();
+    return new Promise(function(resolve) {
+      (function poll() {
+        if (loadedModelId === modelId) return resolve(true);
+        if (Date.now() - started >= (timeoutMs || 9000)) return resolve(false);
+        setTimeout(poll, 120);
+      })();
     });
   }
 
@@ -1621,20 +1691,87 @@
         reportSceneState();
         return done({ ok: true, tool: name, accessory_id: accessoryId, on: on });
       }
+      if (name === "list_models") {
+        var modelQuery = String(args.query || "").toLowerCase().trim();
+        var gameQuery = String(args.game || "").toLowerCase().trim();
+        var modelLimit = Number(args.limit);
+        if (!Number.isFinite(modelLimit) || modelLimit < 1) modelLimit = 80;
+        modelLimit = Math.min(80, Math.round(modelLimit));
+        var modelList = (caps && caps.models) || [];
+        var matchedModels = modelList.filter(function(item) {
+          if (gameQuery && String(item.game || "").toLowerCase().indexOf(gameQuery) === -1) return false;
+          if (!modelQuery) return true;
+          var haystack = [item.id, item.name, item.display_name, item.dir, item.game, item.scene_label, item.category, item.description, item.when_to_use]
+            .concat(Array.isArray(item.keywords) ? item.keywords : [])
+            .join(" ").toLowerCase();
+          return haystack.indexOf(modelQuery) !== -1;
+        });
+        return done({
+          ok: true,
+          tool: name,
+          total: matchedModels.length,
+          models: matchedModels.slice(0, modelLimit).map(function(item) {
+            return {
+              id: item.id,
+              name: item.display_name || item.name || item.id,
+              game: item.game || "",
+              kind: item.kind || "",
+              nsfw_only: Boolean(item.nsfw_only),
+              scene_label: item.scene_label || "",
+              category: item.category || "",
+              description: String(item.description || "").slice(0, 140),
+              when_to_use: String(item.when_to_use || "").slice(0, 100),
+              current: Boolean(item.selected)
+            };
+          }),
+          previous_model: (caps && caps.previous_model) || null,
+          truncated: matchedModels.length > modelLimit
+        });
+      }
       if (name === "switch_model") {
         if (!api.selectModel) return done({ ok: false, tool: name, reason: "not_supported" });
-        var targetModelId = String(args.model_id || "");
-        var models = (appState && appState.models) || [];
-        var targetModel = models.filter(function(item) { return item.id === targetModelId; })[0] || null;
-        if (!targetModel) {
-          return done({ ok: false, tool: name, reason: "not_supported", message: "模型不存在：" + targetModelId + "（可调用 list_scenes 查看场景目录）" });
+        var resolveResult = window.PetAiControl && window.PetAiControl.resolveModelTarget
+          ? window.PetAiControl.resolveModelTarget((caps && caps.models) || [], args, (caps && caps.previous_model) || null)
+          : { ok: false, reason: "not_supported", message: "缺少模型解析器" };
+        if (!resolveResult.ok) {
+          return done({
+            ok: false,
+            tool: name,
+            reason: resolveResult.reason,
+            message: resolveResult.message,
+            candidates: resolveResult.candidates || []
+          });
         }
-        var targetCatalogEntry = catalogEntryForModel(targetModel);
-        if (targetCatalogEntry && targetCatalogEntry.kind === "auxiliary" && sfwActiveNow()) {
+        var targetModel = resolveResult.model;
+        if (!targetModel || !targetModel.id) {
+          return done({ ok: false, tool: name, reason: "not_found", message: "没有找到要切换的模型" });
+        }
+        if (targetModel.id === loadedModelId) {
+          return done({ ok: true, tool: name, model_id: targetModel.id, model_name: targetModel.display_name || targetModel.name || targetModel.id, unchanged: true });
+        }
+        if (targetModel.nsfw_only && sfwActiveNow()) {
+          return done({ ok: false, tool: name, reason: "nsfw_required", message: "该模型为 NSFW 限定，请先在托盘/管理页开启 NSFW" });
+        }
+        if (targetModel.kind === "auxiliary" && sfwActiveNow()) {
           return done({ ok: false, tool: name, reason: "nsfw_required", message: "辅助视角模型（非人物立绘）需要先开启 NSFW" });
         }
-        return api.selectModel(targetModelId).then(function() {
-          return done({ ok: true, tool: name, model_id: targetModelId });
+        return api.selectModel(targetModel.id).then(function(next) {
+          if (next && next.selectError) {
+            return done({ ok: false, tool: name, reason: next.selectError.reason || "select_failed", message: next.selectError.message || "模型切换失败" });
+          }
+          return waitForModelLoaded(targetModel.id, 9000).then(function(loaded) {
+            var displayName = targetModel.display_name || targetModel.name || targetModel.id;
+            showSceneToast("模型：" + displayName, "model", 2600);
+            if (loaded) reportAiCapabilities();
+            return done({
+              ok: true,
+              tool: name,
+              model_id: targetModel.id,
+              model_name: displayName,
+              matched_by: resolveResult.matchedBy,
+              loaded: loaded
+            });
+          });
         }, function(error) {
           return done({ ok: false, tool: name, reason: "error", message: String((error && error.message) || error) });
         });
@@ -1775,6 +1912,9 @@
       var tts = await api.tavernTts(reply);
       if (tts.ok && tts.url && tavernAudioEl && tavernAudioCtx) {
         if (tavernAudioCtx.state === "suspended") await tavernAudioCtx.resume();
+        // 播语音前停掉动作音效与上一条语音，避免声音叠加
+        stopSfxAudio();
+        try { tavernAudioEl.pause(); } catch (e) {}
         tavernAudioEl.src = tts.url;
         tavernAudioEl.onplay = function() { startLipSync(); scheduleSpeakingBodyMotion(120); };
         tavernAudioEl.onended = function() { stopLipSync(); };
@@ -1804,9 +1944,8 @@
 
   function playSoundUrl(url) {
     if (!url) return;
-    var audio = new Audio(url);
-    audio.volume = 0.4;
-    audio.play().catch(function() {});
+    if (!isSoundEnabled()) return;
+    playSfxUrl(url, 0.4);
   }
 
   function tryPlayModelSound(actionId, preview) {
@@ -3314,13 +3453,20 @@
           </header>
           <div class="chat-panel-list" id="chat-panel-list"></div>
           <footer class="chat-panel-foot">
-            <span class="muted" id="chat-panel-hint"></span>
-            <button type="button" id="chat-panel-clear">清空</button>
+            <div class="chat-panel-compose">
+              <input type="text" id="chat-panel-input" placeholder="在这里直接聊天..." maxlength="200" />
+              <button type="button" id="chat-panel-send" title="发送">↵</button>
+            </div>
+            <div class="chat-panel-meta">
+              <span class="muted" id="chat-panel-hint"></span>
+              <button type="button" id="chat-panel-clear">清空</button>
+            </div>
           </footer>
         </aside>
         <div class="tavern-bar" id="tavern-bar">
           <span class="overlay-grip" id="tavern-bar-grip" title="拖动输入框" aria-label="拖动输入框">⠿</span>
           <input type="text" id="tavern-input" placeholder="和呆呆聊天..." maxlength="200" />
+          <button type="button" id="tavern-history" title="打开聊天记录（可在记录里直接聊天）">记录</button>
           <button id="tavern-send">↵</button>
         </div>
       </div>
@@ -3556,7 +3702,8 @@
   function unloadLive2dModel() {
     clearRandomBodyMotion();
     clearSpeakingBodyMotion();
-    stopLipSync();
+    // 切模型时停止所有声音（动作原声 + TTS），避免上一个模型的语音继续播放
+    stopAllPetAudio();
     // 切模型时停止场景并清空换装等参数状态（避免新模型带着上一个模型的服装参数）
     try { stopSceneRuntime({ report: false }); } catch (e) {}
     unbindModelOverrideHandler();
@@ -3881,7 +4028,8 @@
     var baseNsfw = Boolean(sfw.nsfw);
     var nsfw = debugNsfwOverride === null ? baseNsfw : debugNsfwOverride;
     var active = !nsfw;
-    var blur = Number(sfw.blur) || 22;
+    // SFW 强制“看不清”：即使旧配置保存的是 22，也至少按 30px 模糊渲染
+    var blur = Math.max(30, Number(sfw.blur) || 42);
     document.body.classList.toggle("sfw-on", active);
     document.documentElement.style.setProperty("--sfw-blur", blur + "px");
     var overlay = document.getElementById("sfw-overlay");
@@ -4469,11 +4617,15 @@
     if (tavernBusy || !text || !text.trim()) return;
     tavernBusy = true;
     updateTavernButton();
-    var inputEl = document.getElementById("tavern-input");
-    if (inputEl) { inputEl.disabled = true; inputEl.value = ""; }
+    var inputEls = [document.getElementById("tavern-input"), document.getElementById("chat-panel-input")];
+    inputEls.forEach(function (el) {
+      if (!el) return;
+      el.disabled = true;
+      el.value = "";
+      el.placeholder = "呆呆思考中...";
+    });
 
     try {
-      document.getElementById("tavern-input").placeholder = "呆呆思考中...";
       tavernHistory.push({ role: "user", content: text });
       if (tavernHistory.length > 20) tavernHistory = tavernHistory.slice(-20);
 
@@ -4497,6 +4649,9 @@
       if (tts && tts.ok && tts.url && tavernAudioEl && tavernAudioCtx) {
         try {
           if (tavernAudioCtx.state === "suspended") await tavernAudioCtx.resume();
+          // 播语音前停掉动作音效与上一条语音，避免声音叠加
+          stopSfxAudio();
+          try { tavernAudioEl.pause(); } catch (e) {}
           tavernAudioEl.src = tts.url;
           tavernAudioEl.onplay = function() { startLipSync(); scheduleSpeakingBodyMotion(120); };
           tavernAudioEl.onended = function() { stopLipSync(); scheduleRandomBodyMotion(2000); };
@@ -4528,18 +4683,26 @@
     } finally {
     _tavernAbort = null;
     tavernBusy = false;
-    if (inputEl) { inputEl.disabled = false; inputEl.placeholder = "和呆呆聊天..."; }
+    var restoreEls = [document.getElementById("tavern-input"), document.getElementById("chat-panel-input")];
+    restoreEls.forEach(function (el) {
+      if (!el) return;
+      el.disabled = false;
+      el.placeholder = el.id === "chat-panel-input" ? "在这里直接聊天..." : "和呆呆聊天...";
+    });
     updateTavernButton();
-    if (inputEl && !tavernBusy) inputEl.focus();
+    var mainInput = document.getElementById("tavern-input");
+    if (mainInput && !tavernBusy) mainInput.focus();
   }
   }
 
   function updateTavernButton() {
-    var sendBtn = document.getElementById("tavern-send");
-    if (!sendBtn) return;
-    sendBtn.textContent = tavernBusy ? "■" : "↵";
-    sendBtn.style.background = tavernBusy ? "rgba(220, 38, 38, 0.8)" : "rgba(37, 99, 235, 0.7)";
-    sendBtn.title = tavernBusy ? "打断" : "发送";
+    var sendButtons = [document.getElementById("tavern-send"), document.getElementById("chat-panel-send")];
+    sendButtons.forEach(function (sendBtn) {
+      if (!sendBtn) return;
+      sendBtn.textContent = tavernBusy ? "■" : "↵";
+      sendBtn.style.background = tavernBusy ? "rgba(220, 38, 38, 0.8)" : "rgba(37, 99, 235, 0.7)";
+      sendBtn.title = tavernBusy ? "打断" : "发送";
+    });
   }
 
   function bindTavernInput() {
@@ -4559,6 +4722,34 @@
       if (tavernBusy) { stopTavern(); }
       else { sendTavernMessage(inputEl.value); }
     });
+
+    // 输入框旁的「记录」按钮：打开/关闭聊天记录面板
+    var historyBtn = document.getElementById("tavern-history");
+    if (historyBtn) {
+      historyBtn.addEventListener("click", function() {
+        setChatPanelOpen(!chatPanelOpen);
+        if (chatPanelOpen) {
+          var panelInput = document.getElementById("chat-panel-input");
+          if (panelInput) panelInput.focus();
+        }
+      });
+    }
+
+    // 聊天记录面板内直接对话：和主输入框共用 sendTavernMessage / 历史记录
+    var panelInputEl = document.getElementById("chat-panel-input");
+    var panelSendBtn = document.getElementById("chat-panel-send");
+    if (panelInputEl) {
+      panelInputEl.addEventListener("focus", function() { api.tavernFocusWindow(); });
+      panelInputEl.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") { e.preventDefault(); sendTavernMessage(panelInputEl.value); }
+      });
+    }
+    if (panelSendBtn) {
+      panelSendBtn.addEventListener("click", function() {
+        if (tavernBusy) { stopTavern(); }
+        else if (panelInputEl) { sendTavernMessage(panelInputEl.value); }
+      });
+    }
     api.tavernCleanup();
   }
 
@@ -4639,6 +4830,19 @@
     get loadedModelId() { return loadedModelId; },
     get linkCount() { return (modelLinks || []).length; },
     get clicks() { return window.__petClicks || 0; },
+    // 小体积状态快照：端到端测试用（getState 含全部模型 links，体积过大）
+    selection: function() {
+      return {
+        loadedModelId: loadedModelId || "",
+        selectedModelId: (appState && appState.config && appState.config.selectedModelId) || "",
+        selectedModelName: (appState && appState.selectedModel &&
+          (appState.selectedModel.displayName || appState.selectedModel.name)) || "",
+        previousModelId: (appState && appState.previousModel && appState.previousModel.id) || "",
+        previousModelName: (appState && appState.previousModel &&
+          (appState.previousModel.displayName || appState.previousModel.name)) || "",
+        sfw: Boolean(sfwActiveNow())
+      };
+    },
     click: function() { triggerPetClickInteraction(); },
     playRandom: function() { return playRandomBodyMotion("idle"); },
     playIndex: function(group, index) {
@@ -5456,6 +5660,15 @@
     simulateToolCall: function(name, args) {
       return executeToolCall(name, args);
     },
+    audioState: function() {
+      return {
+        soundEnabled: isSoundEnabled(),
+        sfxUrl: window.__lastPetSoundUrl || "",
+        sfxPlaying: Boolean(sfxAudio && !sfxAudio.paused && !sfxAudio.ended),
+        ttsPlaying: Boolean(tavernAudioEl && !tavernAudioEl.paused && !tavernAudioEl.ended)
+      };
+    },
+    stopAllAudio: function() { stopAllPetAudio(); return true; },
     getCapabilities: function() { return buildAiCapabilities(); },
     reportCapabilitiesNow: function() { return reportAiCapabilities(); },
     toolLog: function() { return toolCallLog.slice(-30); },

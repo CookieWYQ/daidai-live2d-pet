@@ -69,7 +69,7 @@ const DEFAULT_CONFIG = {
   // SFW 隐私保护：默认开启毛玻璃遮罩；false 表示 NSFW 清晰画面（托盘菜单可切）
   nsfwMode: false,
   // 毛玻璃模糊强度（px），仅作为视觉参数暴露在 config.json，不额外做 UI
-  sfwBlur: 22,
+  sfwBlur: 42,
   // 场景系统：AI 对话内容自动切换动作/场景（托盘菜单可关；离线场景面板不受影响）
   sceneAutoEnabled: true,
   // AI 控制：允许 AI 在聊天中调整桌宠缩放（默认关闭，防止 AI 擅自改窗口大小）
@@ -176,7 +176,7 @@ function mergeConfig(current, patch) {
   next.soundEnabled = next.soundEnabled !== false;
   // SFW 开关只接受布尔值，避免字符串 "false" 被当成 true
   next.nsfwMode = next.nsfwMode === true;
-  next.sfwBlur = Math.min(40, Math.max(8, Number(next.sfwBlur || DEFAULT_CONFIG.sfwBlur)));
+  next.sfwBlur = Math.min(72, Math.max(8, Number(next.sfwBlur || DEFAULT_CONFIG.sfwBlur)));
   // AI 自动场景开关同样只接受布尔值
   next.sceneAutoEnabled = next.sceneAutoEnabled !== false;
   // AI 控制开关：只接受布尔值，默认关闭（允许 AI 调整缩放需用户明确开启）

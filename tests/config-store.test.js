@@ -45,10 +45,10 @@ test("SFW 默认开启：nsfwMode 默认 false，只接受布尔值", () => {
   assert.equal(mergeConfig({ nsfwMode: true }, { nsfwMode: false }).nsfwMode, false);
 });
 
-test("sfwBlur 被限制在 8-40px", () => {
-  assert.equal(mergeConfig({ sfwBlur: 100 }, {}).sfwBlur, 40);
+test("sfwBlur 被限制在 8-72px，默认 42（SFW 强模糊）", () => {
+  assert.equal(mergeConfig({ sfwBlur: 100 }, {}).sfwBlur, 72);
   assert.equal(mergeConfig({ sfwBlur: 1 }, {}).sfwBlur, 8);
-  assert.equal(mergeConfig({}, {}).sfwBlur, 22);
+  assert.equal(mergeConfig({}, {}).sfwBlur, 42);
 });
 
 test("桌宠缩放限制在 25%~200%，并按 1% 取整", () => {

@@ -87,10 +87,13 @@ async function main() {
 
   const original = await pet.evaluate(`(async () => {
     const st = await window.daidaiPet.getState();
-    return { overlay: st.config.overlay, aiControl: st.config.aiControl, tavern: { textBaseUrl: st.config.tavern.textBaseUrl, textApiKey: st.config.tavern.textApiKey, textModel: st.config.tavern.textModel }, petScale: st.config.petScale };
+    return { overlay: st.config.overlay, aiControl: st.config.aiControl, tavern: { textBaseUrl: st.config.tavern.textBaseUrl, textApiKey: st.config.tavern.textApiKey, textModel: st.config.tavern.textModel }, petScale: st.config.petScale, safety: { nsfwMode: st.config.nsfwMode, sfwBlur: st.config.sfwBlur, soundEnabled: st.config.soundEnabled } };
   })()`);
 
   try {
+    // 测试纪律（用户要求）：始终 SFW 强模糊、声音关闭，测试截图不可辨认
+    await pet.evaluate(`window.daidaiPet.setConfig({ nsfwMode: false, sfwBlur: 72, soundEnabled: false })`);
+    await sleep(800);
     // 起始清理：关聊天面板、清空气泡，保证拖动命中率
     await pet.evaluate(`(() => {
       const p = document.getElementById('chat-panel');
@@ -254,9 +257,9 @@ async function main() {
     const toolOff = await pet.evaluate(`window.__petDebug.simulateToolCall('set_scale', { percent: 180 })`);
     record("关闭后无 set_scale 工具且执行器拒绝", Boolean(capsOff.tools && !capsOff.tools.includes("set_scale") && toolOff && toolOff.ok === false), { tools: capsOff.tools, toolOff });
 
-    // 恢复原配置（含缩放/窗口尺寸）
+    // 恢复原配置（含缩放/窗口尺寸/隐私与声音开关）
     await pet.evaluate(`(async () => {
-      await window.daidaiPet.setConfig({ overlay: ${JSON.stringify(original.overlay)}, aiControl: ${JSON.stringify(original.aiControl)}, tavern: ${JSON.stringify(original.tavern)} });
+      await window.daidaiPet.setConfig({ overlay: ${JSON.stringify(original.overlay)}, aiControl: ${JSON.stringify(original.aiControl)}, tavern: ${JSON.stringify(original.tavern)}, nsfwMode: ${JSON.stringify(original.safety.nsfwMode)}, sfwBlur: ${JSON.stringify(original.safety.sfwBlur)}, soundEnabled: ${JSON.stringify(original.safety.soundEnabled)} });
       if (window.daidaiPet.setPetScale) { try { await window.daidaiPet.setPetScale(${Number(original.petScale) || 0.25}); } catch (e) {} }
       return true;
     })()`);

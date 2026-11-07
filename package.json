@@ -1,6 +1,6 @@
 {
   "name": "daidai-live2d-pet",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": false,
   "description": "Open-source Electron Live2D desktop pet: fine-grained scaling, configurable global hotkeys, text chat history, AI session adapters and scene/motion system.",
   "type": "commonjs",

@@ -39,8 +39,8 @@ test("强制模式覆盖已保存选择但保留 savedNsfw，便于测试后恢�
   assert.equal(normal.forced, null);
 });
 
-test("模糊强度被限制在 8-40px", () => {
-  assert.equal(sfwState({ sfwBlur: 100 }, null).blur, 40);
+test("模糊强度被限制在 8-72px，默认 42（SFW 强模糊）", () => {
+  assert.equal(sfwState({ sfwBlur: 100 }, null).blur, 72);
   assert.equal(sfwState({ sfwBlur: 1 }, null).blur, 8);
-  assert.equal(sfwState({}, null).blur, 22);
+  assert.equal(sfwState({}, null).blur, 42);
 });

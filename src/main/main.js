@@ -139,7 +139,7 @@ function petRunTool(name, args) {
     const timer = setTimeout(() => {
       pendingToolCalls.delete(requestId);
       resolve({ ok: false, reason: "timeout" });
-    }, 5000);
+    }, name === "switch_model" ? 20000 : 5000);
     pendingToolCalls.set(requestId, (result) => {
       clearTimeout(timer);
       resolve(result);
@@ -158,6 +158,15 @@ function appIcon() {
 
 function selectedModel() {
   return config.selectedModelId ? modelRegistry.get(config.selectedModelId) : null;
+}
+
+// 上一个模型（用于 AI“换回上一个”）：只在进程内记忆，任何入口切模型都会更新
+let previousModelId = "";
+function rememberModelSwitch(nextModelId) {
+  const currentId = config && config.selectedModelId ? config.selectedModelId : "";
+  if (currentId && nextModelId && currentId !== nextModelId) {
+    previousModelId = currentId;
+  }
 }
 
 function scanSoundsDir() {
@@ -182,6 +191,7 @@ function rendererPayload() {
     config,
     models: modelRegistry.list(),
     selectedModel: selectedModel(),
+    previousModel: previousModelId ? modelRegistry.get(previousModelId) : null,
     selectedSounds: scanSoundsDir(),    // SFW 毛玻璃：渲染进程据此显示/移除遮罩（forced 非 null 时为启动参数强制，测试用）
     sfw: sfwState(config, effectiveNsfwOverride()),
     // 场景系统：scenes.json 全量配置 + 最近场景状态 + AI 自动切换开关
@@ -800,6 +810,7 @@ function playCatalogScene(payload) {
   if (entry.nsfwOnly && currentSfw()) {
     return { ok: false, reason: "nsfw_required", message: "该场景为 NSFW 限定，请先在托盘菜单开启 NSFW", modelId };
   }
+  rememberModelSwitch(modelId);
   config = configStore.save({ selectedModelId: modelId });
   const targetScene = sceneId || entry.defaultScene || "idle";
   if (petWindow && !petWindow.isDestroyed()) {
@@ -1628,6 +1639,7 @@ function registerIpc() {
     });
     if (result.canceled || !result.filePaths.length) return rendererPayload();
     const record = modelRegistry.importDirectory(result.filePaths[0]);
+    rememberModelSwitch(record.id);
     config = configStore.save({ selectedModelId: record.id });
     broadcast();
     return rendererPayload();
@@ -1646,6 +1658,7 @@ function registerIpc() {
       };
       return payload;
     }
+    rememberModelSwitch(modelId);
     config = configStore.save({ selectedModelId: modelId });
     broadcast();
     return rendererPayload();
@@ -1671,6 +1684,7 @@ function registerIpc() {
     // 扫描后若当前选中的模型已不存在（例如模型库路径被移动），自动切到第一个可用模型
     const models = modelRegistry.list();
     if (models.length && (!config.selectedModelId || !modelRegistry.get(config.selectedModelId))) {
+      rememberModelSwitch(models[0].id);
       config = configStore.save({ selectedModelId: models[0].id });
     }
     loadAllScenes();
@@ -1791,9 +1805,14 @@ function registerIpc() {
       // 场景协议 + 能力简报：场景说明仅在“AI 自动切换场景”开启时注入；
       // AI 缩放开关独立（默认关闭）：开启时也注入 caps.brief（其中含 set_scale 说明）
       const sceneAiEnabled = config.sceneAutoEnabled !== false && Boolean(scenesConfig);
-      const scaleEnabled = Boolean(config.aiControl && config.aiControl.scaleEnabled === true);
       // 工具 schema 来自渲染进程上报的当前模型能力（模型无关：换模型后 schema 自动变化）
-      const caps = lastCapabilities && lastCapabilities.model_id === (config.selectedModelId || "") ? lastCapabilities : null;
+      const capsFresh = Boolean(lastCapabilities && lastCapabilities.model_id === (config.selectedModelId || ""));
+      const caps = capsFresh ? lastCapabilities : null;
+      // 刚切完模型、新模型还在加载时 caps 会对不上：只保留“换模型/查模型”工具，
+      // 否则用户紧接着说“换回去”会因为没有工具而失败。
+      const staleSwitchTools = !capsFresh && lastCapabilities && Array.isArray(lastCapabilities.tools)
+        ? lastCapabilities.tools.filter((tool) => tool && tool.function && ["switch_model", "list_models"].includes(tool.function.name))
+        : [];
       const baseScenePrompt = sceneAiEnabled
         ? buildSystemPrompt(rolePrompt, scenesConfig, config.selectedModelId)
         : rolePrompt;
@@ -1801,12 +1820,15 @@ function registerIpc() {
       const catalogPrompt = sceneAiEnabled
         ? buildCatalogPrompt(sceneCatalog, { currentModelId: config.selectedModelId || "", sfw: currentSfw() })
         : "";
-      const systemPrompt = (sceneAiEnabled || scaleEnabled) && (catalogPrompt || (caps && caps.brief))
-        ? [baseScenePrompt, catalogPrompt, caps && caps.brief].filter(Boolean).join("\n\n")
-        : baseScenePrompt;
+      const promptParts = [baseScenePrompt];
+      if (sceneAiEnabled && catalogPrompt) promptParts.push(catalogPrompt);
+      if (caps && caps.brief) promptParts.push(caps.brief);
+      else if (staleSwitchTools.length) promptParts.push("（当前模型刚切换、正在加载；仍可用 switch_model / list_models 切换模型。）");
+      const systemPrompt = promptParts.filter(Boolean).join("\n\n");
       // 工具由渲染进程按「场景开关 / 缩放开关」过滤：两者都关时为空数组 → 不开启 function calling
-      let useTools = Boolean(caps && Array.isArray(caps.tools) && caps.tools.length && !toolsUnsupported);
-      const tools = useTools ? caps.tools : null;
+      const activeTools = caps && Array.isArray(caps.tools) ? caps.tools : staleSwitchTools;
+      let useTools = Boolean(activeTools.length && !toolsUnsupported);
+      const tools = useTools ? activeTools : null;
       const conversation = [{ role: "system", content: systemPrompt }].concat(messages || []);
       const toolResults = [];
       let finalMessage = null;
