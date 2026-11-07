@@ -21,7 +21,7 @@
 
 - `npm test` **62/62 PASS**（新增 switch_model/list_models/resolveModelTarget/语义匹配、SFW 强模糊边界）
 - 新增 `scripts/verify-model-switch.mjs`：**22/22 PASS**（强制 SFW + 关闭声音；mock LLM 按名称切换 → 加载完成 → 「换回去」；`list_models` 语义搜索；游戏名歧义候选；SFW 下 NSFW 模型拦截；「记录」按钮与面板内直接聊天；结果写入 `screenshots/model-switch-sfw/model_switch_verify.json`）
-- 自动化测试统一要求：启动加 `--sfw`、测试中强制 SFW 强模糊（≥30px）、关闭声音，测试截图不可辨认
+- 自动化测试统一要求：启动加 `--sfw`、测试中强制 SFW 强模糊（≥42px）、关闭声音，测试截图不可辨认
 
 ## v0.3.0（2026-11-07）
 

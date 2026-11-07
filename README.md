@@ -231,7 +231,7 @@ node scripts/verify-model-switch.mjs --port=9333
 
 验证内容：按模型名切换并等加载完成、「换回去」按 `previous` 切回、上一个模型记录与能力清单刷新、`list_models` 语义搜索、游戏名歧义候选、SFW 下 NSFW 模型拦截、「记录」按钮与面板内直接聊天；结果写入 `screenshots/model-switch-sfw/model_switch_verify.json`。
 
-> 测试纪律：所有自动化脚本都要求启动时加 `--sfw`，并在测试中强制 SFW 强模糊（≥30px）、关闭声音；截图不可辨认。
+> 测试纪律：所有自动化脚本都要求启动时加 `--sfw`，并在测试中强制 SFW 强模糊（≥42px）、关闭声音；截图不可辨认。
 
 ### 项目结构
 

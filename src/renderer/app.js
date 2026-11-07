@@ -4028,8 +4028,8 @@
     var baseNsfw = Boolean(sfw.nsfw);
     var nsfw = debugNsfwOverride === null ? baseNsfw : debugNsfwOverride;
     var active = !nsfw;
-    // SFW 强制“看不清”：即使旧配置保存的是 22，也至少按 30px 模糊渲染
-    var blur = Math.max(30, Number(sfw.blur) || 42);
+    // SFW 强制“看不懂”：无论旧配置是多少，渲染下限 42px（配合强降饱和/灰度）
+    var blur = Math.max(42, Number(sfw.blur) || 42);
     document.body.classList.toggle("sfw-on", active);
     document.documentElement.style.setProperty("--sfw-blur", blur + "px");
     var overlay = document.getElementById("sfw-overlay");
