@@ -50,6 +50,8 @@ contextBridge.exposeInMainWorld("daidaiPet", {
   openGeneratedScenes: () => ipcRenderer.invoke("model:open-generated-scenes"),
   // 场景目录：一个模型 = 一个可切换场景（含描述/whenToUse/NSFW 限制）
   playCatalogScene: (modelId, sceneId) => ipcRenderer.invoke("scene:play-catalog", { modelId, sceneId: sceneId || "" }),
+  // 管理页缩放兜底（manager-guard.js 调用）：恢复 100% 页面缩放
+  resetManagerZoom: () => ipcRenderer.invoke("app:reset-manager-zoom"),
   onCatalogScene: (callback) => subscribe("pet:catalog-scene", callback),
   // 桌宠缩放（25%~200%，1% 粒度）
   setPetScale: (scale) => ipcRenderer.invoke("pet:set-scale", scale),

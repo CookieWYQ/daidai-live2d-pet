@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="./models-ui.css" />
   <link rel="stylesheet" href="./task13-ui.css" />
   <link rel="stylesheet" href="./character-ui.css" />
+  <!-- 管理页响应式 / 页面缩放兜底（必须放在最后覆盖 styles.css） -->
+  <link rel="stylesheet" href="./manager-responsive.css" />
 </head>
 <body>
   <div id="app"></div>
@@ -21,6 +23,8 @@
   <script src="./vendor/live2dcubismcore.min.js"></script>
   <script src="./vendor/live2d-display.min.js"></script>
   <script src="./ai-control.js"></script>
+  <!-- 管理页缩放兜底：拦截 Ctrl+滚轮，异常缩放通过 IPC 复位 -->
+  <script src="./manager-guard.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>

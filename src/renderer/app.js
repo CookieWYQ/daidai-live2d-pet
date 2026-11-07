@@ -58,6 +58,13 @@
   let managerCharacterStatus = "";
   // 场景目录：主进程切换场景时先发 pet:catalog-scene，等模型加载完成后执行
   let pendingCatalogScene = null;
+  // 聊天悬浮层：布局刷新节流、拖动会话、拖动后短暂抑制气泡 click（避免拖完误开聊天面板）
+  let overlayLayoutTimer = null;
+  let overlayLayoutForce = false;
+  let overlayDrag = null;
+  let overlaySuppressClickUntil = 0;
+  // follow 锚点测量缓存：同一模型/窗口尺寸下复用像素包围盒，避免每次状态轮询都 readPixels
+  let overlayArtCache = null;
   let managerSelectError = "";
   let statusMotionKind = "idle";
   let statusMotionTimer = null;
@@ -1248,6 +1255,8 @@
     sceneRuntime.lastSource = source;
     showSceneToast(scene.label, source);
     reportSceneState();
+    // 场景会改变姿态/内容包围盒：节流刷新气泡 follow 锚点（强制重测）
+    scheduleOverlayLayout(260, true);
     var self = scene;
     sceneRuntime.timer = setTimeout(function() {
       sceneRuntime.timer = null;
@@ -1403,7 +1412,16 @@
           current: catalogEntryForModel(model),
           entries: catalogEntries()
         },
-        sfwActive: sfwActiveNow()
+        sfwActive: sfwActiveNow(),
+        // 「AI 自动切换场景/动作」总开关：关闭时 ai-control 不生成场景类工具与说明
+        sceneAiEnabled: Boolean(appState && appState.config && appState.config.sceneAutoEnabled !== false),
+        // AI 缩放能力：仅管理页「允许 AI 控制桌宠缩放」开启时生成 set_scale 工具
+        scale: {
+          percent: currentPetScalePercent(),
+          min: 25,
+          max: 200,
+          controllable: Boolean(appState && appState.config && appState.config.aiControl && appState.config.aiControl.scaleEnabled === true)
+        }
       });
       caps.tools = window.PetAiControl.buildTools(caps);
       caps.brief = window.PetAiControl.buildBrief(caps);
@@ -1618,6 +1636,25 @@
         return api.selectModel(targetModelId).then(function() {
           return done({ ok: true, tool: name, model_id: targetModelId });
         }, function(error) {
+          return done({ ok: false, tool: name, reason: "error", message: String((error && error.message) || error) });
+        });
+      }
+      if (name === "set_scale") {
+        // AI 调整桌宠缩放：仅管理页「允许 AI 控制桌宠缩放」开启时才会下发该工具；
+        // 执行器再校验一次开关，防止模型幻觉/文本标签协议绕过工具列表直接改缩放。
+        if (!(appState && appState.config && appState.config.aiControl && appState.config.aiControl.scaleEnabled === true)) {
+          return done({ ok: false, tool: name, reason: "disabled", message: "用户未开启「允许 AI 控制桌宠缩放」" });
+        }
+        var requestedPercent = Number(args.percent);
+        if (!Number.isFinite(requestedPercent)) {
+          return done({ ok: false, tool: name, reason: "bad_args", message: "percent 需为 25~200 的数字" });
+        }
+        var targetPercent = Math.max(25, Math.min(200, Math.round(requestedPercent)));
+        if (!api || !api.setPetScale) return done({ ok: false, tool: name, reason: "not_supported" });
+        return Promise.resolve(api.setPetScale(targetPercent / 100)).then(function (result) {
+          showSceneToast("桌宠缩放 " + targetPercent + "%", "scale", 2000);
+          return done({ ok: true, tool: name, percent: targetPercent, apply: result || null });
+        }, function (error) {
           return done({ ok: false, tool: name, reason: "error", message: String((error && error.message) || error) });
         });
       }
@@ -2076,6 +2113,26 @@
     ].join("");
   }
 
+  // 聊天悬浮层设置区：气泡跟随模型（follow/manual）+ 重置位置（位置在宠物窗内拖动调整）
+  function renderOverlaySettings(state) {
+    var overlay = (state.config && state.config.overlay) || {};
+    var follow = !(overlay.bubble && overlay.bubble.mode === "manual");
+    var locked = overlay.locked === true;
+    return [
+      '<section class="section overlay-settings">',
+      '  <h2>聊天悬浮层 <span class="muted">气泡/输入框/记录面板按窗口百分比保存位置</span></h2>',
+      '  <div class="settings-grid">',
+      '    <label class="setting-row"><span><strong>气泡跟随模型头顶</strong><span class="muted">开启：文字气泡自动贴在模型头顶、不挡模型；关闭：使用拖动后的固定位置</span></span><span class="switch-control"><input id="overlay-bubble-follow" type="checkbox"' + (follow ? ' checked' : '') + ' /><span class="switch-track" aria-hidden="true"></span></span></label>',
+      '  </div>',
+      '  <div class="chat-actions">',
+      '    <button type="button" class="ghost" id="overlay-reset">重置悬浮层位置</button>',
+      '    <span class="muted" id="overlay-status">' + (locked ? "布局已锁定（config.overlay.locked=true），宠物窗内暂不可拖动" : "在桌宠窗口里拖动文字气泡、输入条 ⠿ 把手或聊天记录面板标题栏即可调整位置") + '</span>',
+      '  </div>',
+      '  <p class="muted">位置以相对宠物窗口的百分比保存，窗口缩放后相对位置不变；拖动气泡后会自动切换为「固定位置」（manual），可用上方开关恢复跟随。</p>',
+      '</section>'
+    ].join("");
+  }
+
   // 与 config-store DEFAULT_HOTKEYS 保持一致的恢复默认值
   var HOTKEY_RESET_DEFAULTS = {
     enabled: true,
@@ -2214,6 +2271,34 @@
     }
   }
 
+  // 聊天悬浮层设置绑定：气泡跟随开关 + 重置位置（保存完整 overlay 对象，避免浅合并丢字段）
+  function bindOverlaySettings(state) {
+    var followEl = document.getElementById("overlay-bubble-follow");
+    var resetBtn = document.getElementById("overlay-reset");
+    var statusEl = document.getElementById("overlay-status");
+    function setStatus(text) { if (statusEl) statusEl.textContent = text || ""; }
+    if (followEl) {
+      followEl.addEventListener("change", function () {
+        var cfg = overlayConfig();
+        cfg.bubble.mode = followEl.checked ? "follow" : "manual";
+        setStatus("正在保存…");
+        api.setConfig({ overlay: cfg }).then(function (next) {
+          appState = next || appState;
+          setStatus(followEl.checked ? "已开启：气泡跟随模型头顶" : "已关闭：气泡使用固定位置（可在宠物窗拖动）");
+        });
+      });
+    }
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function () {
+        setStatus("正在重置…");
+        api.setConfig({ overlay: OVERLAY_DEFAULTS }).then(function (next) {
+          appState = next || appState;
+          if (appState) renderManager(appState);
+        });
+      });
+    }
+  }
+
   function renderManager(state) {
     root.innerHTML = `
       <div class="manager-shell">
@@ -2302,6 +2387,16 @@
               </label>
               <label class="setting-row">
                 <span>
+                  <strong>允许 AI 控制桌宠缩放</strong>
+                  <span class="muted">开启后 AI 可在聊天中把桌宠缩放到 25%~200%；关闭时 AI 不会改缩放</span>
+                </span>
+                <span class="switch-control">
+                  <input id="ai-scale-enabled" type="checkbox" />
+                  <span class="switch-track" aria-hidden="true"></span>
+                </span>
+              </label>
+              <label class="setting-row">
+                <span>
                   <strong>状态服务</strong>
                   <span class="muted">默认兼容本地成熟宠物 bridge 的 /status</span>
                 </span>
@@ -2314,6 +2409,7 @@
           ${renderTavernSettings(state)}
           ${renderHotkeySettings(state)}
           ${renderChatSettings(state)}
+          ${renderOverlaySettings(state)}
           <section class="section">
             <h2>Live2D 模型 <span id="model-stats" class="muted"></span></h2>
             <div class="model-toolbar">
@@ -2396,6 +2492,7 @@
     }
     bindHotkeySettings(state);
     bindChatSettings(state);
+    bindOverlaySettings(state);
     var showBackground = document.getElementById("show-background");
     if (showBackground) {
       showBackground.checked = state.config.showBackground === true;
@@ -2459,6 +2556,16 @@
     soundEnabled.addEventListener("change", () => api.setConfig({ soundEnabled: soundEnabled.checked }));
     if (sfwEnabled) {
       sfwEnabled.addEventListener("change", () => api.setConfig({ nsfwMode: !sfwEnabled.checked }));
+    }
+    // 允许 AI 控制桌宠缩放（默认关闭；开启后 ai-control 才会生成 set_scale 工具）
+    var aiScaleEnabled = document.getElementById("ai-scale-enabled");
+    if (aiScaleEnabled) {
+      aiScaleEnabled.checked = Boolean(state.config.aiControl && state.config.aiControl.scaleEnabled === true);
+      aiScaleEnabled.addEventListener("change", () => {
+        api.setConfig({ aiControl: { scaleEnabled: aiScaleEnabled.checked } }).then(function (next) {
+          appState = next || appState;
+        });
+      });
     }
     statusUrl.addEventListener("change", () => api.setConfig({ statusPollUrl: statusUrl.value.trim() }));
 
@@ -2831,6 +2938,350 @@
     }
   }
 
+  // ==============================
+  // 聊天悬浮层：文字气泡贴在模型头顶；气泡/输入条/聊天记录面板可自由拖动，
+  // 位置按 pet-stage 百分比保存（窗口缩放后相对位置不变）。配置来自 config.overlay。
+  // ==============================
+  // 兜底默认值：与 src/main/config-store.js 的 DEFAULT_OVERLAY 保持一致（老主进程/旧配置缺字段时用）
+  var OVERLAY_DEFAULTS = {
+    locked: false,
+    bubble: { mode: "follow", x: 50, y: 18, width: 78 },
+    input: { x: 50, y: 92, width: 72 },
+    panel: { x: 78, y: 50, width: 84, height: 88 }
+  };
+
+  function overlayNumber(value, fallback, min, max) {
+    var num = value === null || value === undefined || value === "" ? NaN : Number(value);
+    if (!isFinite(num)) return fallback;
+    return Math.min(max, Math.max(min, num));
+  }
+
+  // 读取并归一化当前 overlay 配置（老配置缺字段/越界值时回落到默认）
+  function overlayConfig() {
+    var raw = (appState && appState.config && appState.config.overlay) || {};
+    var bubble = raw.bubble || {};
+    var input = raw.input || {};
+    var panel = raw.panel || {};
+    return {
+      locked: raw.locked === true,
+      bubble: {
+        mode: bubble.mode === "manual" ? "manual" : "follow",
+        x: overlayNumber(bubble.x, OVERLAY_DEFAULTS.bubble.x, 0, 100),
+        y: overlayNumber(bubble.y, OVERLAY_DEFAULTS.bubble.y, 0, 100),
+        width: overlayNumber(bubble.width, OVERLAY_DEFAULTS.bubble.width, 25, 96)
+      },
+      input: {
+        x: overlayNumber(input.x, OVERLAY_DEFAULTS.input.x, 0, 100),
+        y: overlayNumber(input.y, OVERLAY_DEFAULTS.input.y, 0, 100),
+        width: overlayNumber(input.width, OVERLAY_DEFAULTS.input.width, 25, 96)
+      },
+      panel: {
+        x: overlayNumber(panel.x, OVERLAY_DEFAULTS.panel.x, 0, 100),
+        y: overlayNumber(panel.y, OVERLAY_DEFAULTS.panel.y, 0, 100),
+        width: overlayNumber(panel.width, OVERLAY_DEFAULTS.panel.width, 25, 96),
+        height: overlayNumber(panel.height, OVERLAY_DEFAULTS.panel.height, 35, 96)
+      }
+    };
+  }
+
+  function overlayStageSize(stage) {
+    return {
+      width: Math.max(1, (stage && stage.clientWidth) || window.innerWidth || 1),
+      height: Math.max(1, (stage && stage.clientHeight) || window.innerHeight || 1)
+    };
+  }
+
+  // 把元素中心点限制在窗口内（留 margin），元素比窗口还大时直接居中
+  function clampOverlayCenter(value, size, stageSize, margin) {
+    var half = Math.min(size / 2, stageSize / 2 - 1);
+    var min = half + margin;
+    var max = stageSize - half - margin;
+    if (max <= min) return stageSize / 2;
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function overlayPercent(value) {
+    return Math.round(value * 100) / 100;
+  }
+
+  // 气泡 follow 锚点：模型实际绘制内容的顶部中点（不盖住模型）。
+  // 优先用像素包围盒（对 C2/C3 都准确，只在布局事件时读一次）；失败时兜底 canvas bounds。
+  // forceMeasure=true（模型加载/窗口 resize/场景切换）时重新测量，其余情况复用短缓存。
+  function bubbleFollowAnchor(stageSize, forceMeasure) {
+    if (!live2dModel) return null;
+    var art = null;
+    var cache = overlayArtCache;
+    var cacheValid = !forceMeasure && cache && cache.modelId === loadedModelId &&
+      cache.width === stageSize.width && cache.height === stageSize.height &&
+      Date.now() - cache.at < 15000;
+    if (cacheValid) {
+      art = cache.art;
+    } else {
+      try { art = measureScreenArtBounds(); } catch (e) { art = null; }
+      if (!art || art.error || !isFinite(art.top) || !isFinite(art.left) || !isFinite(art.right)) {
+        art = null;
+        try {
+          var bounds = live2dModel.getBounds();
+          if (bounds && isFinite(bounds.x) && isFinite(bounds.y)) {
+            art = {
+              left: bounds.x,
+              top: bounds.y,
+              right: bounds.x + Number(bounds.width || 0),
+              bottom: bounds.y + Number(bounds.height || 0)
+            };
+          }
+        } catch (e) { art = null; }
+      }
+      if (art) {
+        overlayArtCache = { modelId: loadedModelId, width: stageSize.width, height: stageSize.height, at: Date.now(), art: art };
+      }
+    }
+    if (!art) return null;
+    var stack = document.getElementById("chat-bubble-stack");
+    var stackW = (stack && stack.offsetWidth) || Math.min(stageSize.width * 0.78, 340);
+    var stackH = (stack && stack.offsetHeight) || 40;
+    var x = clampOverlayCenter((art.left + art.right) / 2, stackW, stageSize.width, 6);
+    // 气泡堆叠底部对齐锚点（transform translate(-50%,-100%)）：顶部不能超出窗口
+    var y = Math.min(stageSize.height - 6, Math.max(stackH + 6, art.top - 8));
+    return { x: x, y: y, art: art, top: art.top };
+  }
+
+  // 把 overlay 配置写进 CSS 变量/元素位置；follow 时按模型头顶锚点定位
+  function applyOverlayLayout(forceMeasure) {
+    var stage = document.getElementById("pet-stage");
+    if (!stage) return;
+    var cfg = overlayConfig();
+    var size = overlayStageSize(stage);
+    var state = { config: cfg, window: size, applied: {}, follow: null };
+    // 尺寸类配置写成 CSS 变量（width/height 为百分比）
+    stage.style.setProperty("--overlay-bubble-width", cfg.bubble.width + "%");
+    stage.style.setProperty("--overlay-input-width", cfg.input.width + "%");
+    stage.style.setProperty("--overlay-panel-width", cfg.panel.width + "%");
+    stage.style.setProperty("--overlay-panel-height", cfg.panel.height + "%");
+
+    var stack = document.getElementById("chat-bubble-stack");
+    if (stack) {
+      var follow = cfg.bubble.mode === "follow";
+      var anchor = follow ? bubbleFollowAnchor(size, forceMeasure === true) : null;
+      var useFollow = Boolean(anchor);
+      stack.classList.toggle("overlay-follow", useFollow);
+      stack.classList.toggle("overlay-manual", !useFollow);
+      if (useFollow) {
+        stack.style.left = anchor.x + "px";
+        stack.style.top = anchor.y + "px";
+        state.applied.bubble = { mode: "follow", x: anchor.x, y: anchor.y, artTop: anchor.art.top };
+        state.follow = { x: anchor.x, y: anchor.y, art: anchor.art };
+      } else {
+        var stackW = stack.offsetWidth || (size.width * cfg.bubble.width) / 100;
+        var stackH = stack.offsetHeight || 40;
+        var bx = clampOverlayCenter((cfg.bubble.x / 100) * size.width, stackW, size.width, 6);
+        var by = clampOverlayCenter((cfg.bubble.y / 100) * size.height, stackH, size.height, 6);
+        stack.style.left = bx + "px";
+        stack.style.top = by + "px";
+        state.applied.bubble = { mode: cfg.bubble.mode, x: bx, y: by };
+      }
+    }
+
+    var bar = document.getElementById("tavern-bar");
+    if (bar) {
+      var barW = bar.offsetWidth || (size.width * cfg.input.width) / 100;
+      var barH = bar.offsetHeight || 46;
+      var ix = clampOverlayCenter((cfg.input.x / 100) * size.width, barW, size.width, 6);
+      var iy = clampOverlayCenter((cfg.input.y / 100) * size.height, barH, size.height, 6);
+      bar.style.left = ix + "px";
+      bar.style.top = iy + "px";
+      state.applied.input = { x: ix, y: iy };
+    }
+
+    var panel = document.getElementById("chat-panel");
+    if (panel) {
+      var panelW = panel.offsetWidth || (size.width * cfg.panel.width) / 100;
+      var panelH = panel.offsetHeight || (size.height * cfg.panel.height) / 100;
+      var px = clampOverlayCenter((cfg.panel.x / 100) * size.width, panelW, size.width, 4);
+      var py = clampOverlayCenter((cfg.panel.y / 100) * size.height, panelH, size.height, 4);
+      panel.style.left = px + "px";
+      panel.style.top = py + "px";
+      state.applied.panel = { x: px, y: py };
+    }
+    // 自动化/排障快照（只读）：配置 + 实际像素位置 + follow 锚点
+    window.__petOverlayState = state;
+  }
+
+  // 节流刷新：模型加载/窗口 resize/场景切换/配置更新时调用，避免每帧测量像素包围盒。
+  // forceMeasure=true 时丢弃 follow 锚点缓存重新测量（fit/resize/场景切换）。
+  function scheduleOverlayLayout(delay, forceMeasure) {
+    if (forceMeasure) overlayLayoutForce = true;
+    if (overlayLayoutTimer) return;
+    overlayLayoutTimer = setTimeout(function () {
+      overlayLayoutTimer = null;
+      var force = overlayLayoutForce;
+      overlayLayoutForce = false;
+      try { applyOverlayLayout(force); } catch (e) {}
+    }, delay === undefined ? 200 : Math.max(0, delay));
+  }
+
+  // 保存悬浮层位置：必须提交完整 overlay 对象（api.setConfig 是浅合并，只传子对象会丢字段）
+  function saveOverlayPosition(kind, pctX, pctY) {
+    var cfg = overlayConfig();
+    if (kind === "bubble") {
+      cfg.bubble.mode = "manual";
+      cfg.bubble.x = pctX;
+      cfg.bubble.y = pctY;
+    } else if (kind === "input") {
+      cfg.input.x = pctX;
+      cfg.input.y = pctY;
+    } else if (kind === "panel") {
+      cfg.panel.x = pctX;
+      cfg.panel.y = pctY;
+    }
+    if (!api || !api.setConfig) return;
+    api.setConfig({ overlay: cfg }).then(function (next) {
+      if (next) appState = next;
+    }, function () {});
+  }
+
+  // 拖动气泡/输入条/记录面板：pointer 事件 + 4px 阈值 + 边界 clamp + 拖动结束按百分比保存
+  function bindOverlayDrag() {
+    var stage = document.getElementById("pet-stage");
+    if (!stage) return;
+
+    function centerOf(el) {
+      var stageRect = stage.getBoundingClientRect();
+      var rect = el.getBoundingClientRect();
+      return {
+        x: rect.left - stageRect.left + rect.width / 2,
+        y: rect.top - stageRect.top + rect.height / 2,
+        width: rect.width,
+        height: rect.height
+      };
+    }
+
+    function begin(event, el, kind) {
+      if (overlayDrag || event.button !== 0) return;
+      var cfg = overlayConfig();
+      if (cfg.locked) return;
+      var center = centerOf(el);
+      overlayDrag = {
+        el: el,
+        kind: kind,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        centerX: center.x,
+        centerY: center.y,
+        width: center.width,
+        height: center.height,
+        size: overlayStageSize(stage),
+        moved: false,
+        lastX: center.x,
+        lastY: center.y
+      };
+      // 用 document 级监听跟随拖动（不 setPointerCapture，避免影响气泡的普通 click 打开聊天面板）
+      document.addEventListener("pointermove", move);
+      document.addEventListener("pointerup", end);
+      document.addEventListener("pointercancel", end);
+      // follow 气泡被拖动：先按当前视觉中心切到 manual 定位，避免切换 transform 时跳一下
+      if (el.classList.contains("overlay-follow")) {
+        el.classList.remove("overlay-follow");
+        el.classList.add("overlay-manual");
+        el.style.left = center.x + "px";
+        el.style.top = center.y + "px";
+      }
+    }
+
+    function move(event) {
+      var drag = overlayDrag;
+      if (!drag) return;
+      if (event.pointerId !== undefined && drag.pointerId !== event.pointerId) return;
+      var dx = event.clientX - drag.startX;
+      var dy = event.clientY - drag.startY;
+      if (!drag.moved) {
+        if (Math.abs(dx) + Math.abs(dy) <= 4) return;
+        drag.moved = true;
+        drag.el.classList.add("dragging");
+        document.body.classList.add("overlay-dragging");
+      }
+      event.preventDefault();
+      var x = clampOverlayCenter(drag.centerX + dx, drag.width, drag.size.width, 6);
+      var y = clampOverlayCenter(drag.centerY + dy, drag.height, drag.size.height, 6);
+      drag.el.style.left = x + "px";
+      drag.el.style.top = y + "px";
+      drag.lastX = x;
+      drag.lastY = y;
+    }
+
+    function end() {
+      var drag = overlayDrag;
+      overlayDrag = null;
+      document.removeEventListener("pointermove", move);
+      document.removeEventListener("pointerup", end);
+      document.removeEventListener("pointercancel", end);
+      if (!drag) return;
+      drag.el.classList.remove("dragging");
+      document.body.classList.remove("overlay-dragging");
+      if (!drag.moved) return; // 未拖动：保留原 click 行为（气泡点击打开聊天面板）
+      overlaySuppressClickUntil = Date.now() + 350;
+      var pctX = overlayPercent(Math.min(100, Math.max(0, (drag.lastX / drag.size.width) * 100)));
+      var pctY = overlayPercent(Math.min(100, Math.max(0, (drag.lastY / drag.size.height) * 100)));
+      saveOverlayPosition(drag.kind, pctX, pctY);
+    }
+
+    var stack = document.getElementById("chat-bubble-stack");
+    if (stack) {
+      stack.addEventListener("pointerdown", function (event) {
+        if (event.target && event.target.closest && event.target.closest("input,button,textarea,select,a")) return;
+        begin(event, stack, "bubble");
+      });
+    }
+
+    var bar = document.getElementById("tavern-bar");
+    if (bar) {
+      // 输入条只允许按 ⠿ 把手拖动，避免误触输入框
+      bar.addEventListener("pointerdown", function (event) {
+        var grip = event.target && event.target.closest ? event.target.closest(".overlay-grip") : null;
+        if (!grip) return;
+        begin(event, bar, "input");
+      });
+    }
+
+    var panel = document.getElementById("chat-panel");
+    if (panel) {
+      // 聊天记录面板只允许拖动标题栏空白处（按钮不触发）
+      panel.addEventListener("pointerdown", function (event) {
+        var head = event.target && event.target.closest ? event.target.closest(".chat-panel-head") : null;
+        if (!head) return;
+        if (event.target.closest && event.target.closest("button")) return;
+        begin(event, panel, "panel");
+      });
+    }
+
+    bindOverlayStackObserver();
+  }
+
+  // 气泡堆叠高度会随气泡数量/打字机文字增长：follow 模式下面板/气泡若顶出窗口，
+  // 需要用新的高度重新夹紧锚点。ResizeObserver 只在尺寸变化时触发，节流后重新布局。
+  var overlayStackObserver = null;
+  function bindOverlayStackObserver() {
+    var stack = document.getElementById("chat-bubble-stack");
+    if (!stack || typeof ResizeObserver !== "function") return;
+    if (overlayStackObserver) {
+      try { overlayStackObserver.disconnect(); } catch (e) {}
+    }
+    overlayStackObserver = new ResizeObserver(function () {
+      scheduleOverlayLayout(60, false);
+    });
+    overlayStackObserver.observe(stack);
+  }
+
+  // 当前桌宠缩放百分比（AI 能力清单用）：优先实际生效值，其次配置值
+  function currentPetScalePercent() {
+    var state = appState || {};
+    var applied = state.petScale && state.petScale.scale;
+    var base = state.config && state.config.petScale;
+    var scale = Number(applied || base || 1) || 1;
+    return Math.min(200, Math.max(25, Math.round(scale * 100)));
+  }
+
   function renderPetShell() {
     document.body.className = "pet-body";
     root.innerHTML = `        <audio id="tavern-audio" style="display:none"></audio>
@@ -2868,6 +3319,7 @@
           </footer>
         </aside>
         <div class="tavern-bar" id="tavern-bar">
+          <span class="overlay-grip" id="tavern-bar-grip" title="拖动输入框" aria-label="拖动输入框">⠿</span>
           <input type="text" id="tavern-input" placeholder="和呆呆聊天..." maxlength="200" />
           <button id="tavern-send">↵</button>
         </div>
@@ -3051,6 +3503,8 @@
       ms: Math.round((fitEndedAt - fitStartedAt) * 10) / 10,
       at: Date.now()
     };
+    // fit 完成后模型包围盒变化：节流刷新悬浮层（气泡 follow 锚点依赖模型实际绘制内容）
+    scheduleOverlayLayout(120, true);
   }
   var lastFitInfo = null;
   // C2 实际绘制内容尺寸缓存（模型加载默认姿态测量一次；切模型失效）
@@ -3119,6 +3573,7 @@
     hiddenPartState = [];
     artUnitsCache = null;
     pendingArtUnitsMeasure = false;
+    overlayArtCache = null;
     // 桌宠改造：卸载模型时清空当前模型与关联声音，避免切模型后播错声音
     currentModelRecord = null;
     modelLinks = [];
@@ -3460,6 +3915,8 @@
     updateLive2dMotion(state.status);
     // 模型列表/场景配置更新后刷新能力清单（用于 AI function calling 工具 schema）
     reportAiCapabilities();
+    // 悬浮层：配置/窗口/模型变化后重新应用（气泡 follow 锚点、百分比位置）
+    applyOverlayLayout();
   }
 
   function bindPetInteractions() {
@@ -3497,6 +3954,7 @@
       api.onPetResize(function() {
         var refit = function() {
           try { fitLive2dModel(); } catch (e) {}
+          scheduleOverlayLayout(160, true);
         };
         if (window.requestAnimationFrame) {
           window.requestAnimationFrame(function() {
@@ -3595,7 +4053,8 @@
 
     document.addEventListener("mousedown", function(event) {
       if (event.button !== 0) return;
-      if (event.target && event.target.closest && event.target.closest(".tavern-bar")) return;
+      // 悬浮层（气泡/输入条/聊天记录面板/拖动把手）上的鼠标操作不触发“拖宠物窗口”
+      if (event.target && event.target.closest && event.target.closest(".tavern-bar,.chat-bubble-stack,.chat-bubble,.chat-panel,.overlay-grip")) return;
       var point = petCursorPoint();
       var bounds = lastCursorPayload && lastCursorPayload.bounds;
       if (!point || !bounds) return;
@@ -3631,6 +4090,9 @@
         triggerPetClickInteraction();
       }
     });
+
+    // 聊天悬浮层拖动（气泡/输入条把手/聊天记录面板标题栏）
+    bindOverlayDrag();
 
   }
 
@@ -3845,7 +4307,11 @@
     body.className = "chat-bubble-text";
     bubble.appendChild(who);
     bubble.appendChild(body);
-    bubble.addEventListener("click", function () { setChatPanelOpen(true); });
+    bubble.addEventListener("click", function () {
+      // 拖动气泡调整位置后（阈值已触发）不打开聊天面板
+      if (Date.now() < overlaySuppressClickUntil) return;
+      setChatPanelOpen(true);
+    });
     stack.appendChild(bubble);
     chatBubbles.push(bubble);
     while (chatBubbles.length > CHAT_BUBBLE_MAX) {
@@ -4715,6 +5181,9 @@
     },
     // 手动重新 fit（窗口尺寸由外部改过时排障用）
     refit: function() { fitLive2dModel(); return this.viewTransform(); },
+    // 聊天悬浮层自检：overlay 配置 + 实际应用位置（follow 锚点为模型头顶）
+    overlay: function() { return window.__petOverlayState || null; },
+    relayoutOverlay: function() { applyOverlayLayout(true); return window.__petOverlayState; },
     // 强制重建 renderer 后备缓冲（窗口捕获/合成后 GL 缓冲尺寸可能失同步时修复用）
     forceRendererResize: function() {
       if (!live2dApp || !live2dApp.renderer) return null;
@@ -4944,6 +5413,10 @@
     },
     triggerScene: function(id, options) {
       return executeScene(id, Object.assign({ source: "debug", force: true }, options || {}));
+    },
+    // 自动化：直接弹一条文字气泡（不经过聊天 API），用于验证悬浮层位置/点击行为
+    simulateChatBubble: function(text, ms) {
+      return Boolean(pushChatBubble(String(text || "测试气泡"), { ms: Number(ms) || 20000 }));
     },
     simulateAiReply: function(text, userText, force) {
       var raw = String(text || "");

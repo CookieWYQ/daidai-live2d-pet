@@ -64,6 +64,17 @@
       .slice(0, 40);
     var catalogInfo = opts.catalog || {};
     var catalogScenes = catalogSceneList(catalogInfo.entries || []);
+    // 缩放能力：percent=当前百分比，min/max=允许范围，controllable=管理页是否允许 AI 调整
+    var scaleOpts = opts.scale || {};
+    var scale = {
+      percent: Number(scaleOpts.percent),
+      min: Number(scaleOpts.min),
+      max: Number(scaleOpts.max),
+      controllable: Boolean(scaleOpts.controllable)
+    };
+    if (!isFinite(scale.percent)) scale.percent = 100;
+    if (!isFinite(scale.min)) scale.min = 25;
+    if (!isFinite(scale.max)) scale.max = 200;
     var currentEntry = catalogInfo.current ? {
       model_id: catalogInfo.current.modelId,
       game: catalogInfo.current.game,
@@ -81,6 +92,10 @@
       model_name: opts.modelName || sceneCfg.displayName || opts.modelId || "",
       display_scale: sceneCfg.display ? sceneCfg.display.scale : null,
       sfw_active: Boolean(opts.sfwActive),
+      // 「AI 自动切换场景/动作」总开关：关闭时下游不再生成场景类工具与说明（默认开启）
+      scene_ai_enabled: opts.sceneAiEnabled !== false,
+      // 缩放能力：controllable=false 时下游不生成 set_scale 工具
+      scale: scale,
       scenes: scenes,
       catalog_scenes: catalogScenes,
       current_catalog_entry: currentEntry,
@@ -102,9 +117,8 @@
     };
   }
 
-  function buildTools(caps) {
-    if (!caps) return [];
-    var tools = [];
+  // 场景/动作/换装/饰品/模型类工具：由「AI 自动切场景」开关统一控制
+  function buildSceneTools(caps, tools) {
     var sceneIds = (caps.scenes || []).filter(function (scene) { return !scene.experimental; }).map(function (scene) { return scene.id; });
     var catalogIds = (caps.catalog_scenes || []).map(function (entry) { return entry.scene_id; });
     var allSceneIds = sceneIds.concat(catalogIds.filter(function (id) { return sceneIds.indexOf(id) === -1; }));
@@ -236,44 +250,91 @@
         }
       });
     }
+  }
+
+  // 对外工具集合：场景类工具受 scene_ai_enabled 控制；缩放工具独立受 scale.controllable 控制。
+  // 两者都关闭时返回空数组（main.js 据此不再开启 function calling）。
+  function buildTools(caps) {
+    if (!caps) return [];
+    var tools = [];
+    // 兼容旧版 caps（无 scene_ai_enabled 字段时按开启处理，保持原有行为）
+    if (caps.scene_ai_enabled !== false) buildSceneTools(caps, tools);
+    if (caps.scale && caps.scale.controllable) {
+      var currentPercent = Number(caps.scale.percent);
+      if (!isFinite(currentPercent)) currentPercent = 100;
+      tools.push({
+        type: "function",
+        function: {
+          name: "set_scale",
+          description: "直接设置桌宠缩放百分比（调大/调小桌宠）。用户要求「变大 / 变小 / 放大一点 / 缩小一点 / 缩到某个大小」时调用；用户没有要求调整大小时不要调用。",
+          parameters: {
+            type: "object",
+            properties: {
+              percent: {
+                type: "integer",
+                minimum: 25,
+                maximum: 200,
+                description: "目标缩放百分比，当前 " + currentPercent + "%，允许范围 25~200"
+              }
+            },
+            required: ["percent"],
+            additionalProperties: false
+          }
+        }
+      });
+    }
     return tools;
   }
 
   function buildBrief(caps) {
     if (!caps) return "";
-    var lines = ["【当前模型能力（AI 可精确操控）】", "当前模型：" + caps.model_name + "（id=" + caps.model_id + "）。"];
-    var current = caps.current_catalog_entry;
-    if (current) {
-      lines.push("当前场景/模型语义：" + current.scene_label + "（" + current.category + "，" + current.kind + (current.nsfw_only ? "，NSFW限定" : "") + "）。" + current.description);
-      lines.push("何时切换到它/使用它：" + current.when_to_use);
-    }
-    if (caps.scenes && caps.scenes.length) {
-      lines.push("当前模型的场景（play_scene，play_scene 也可传场景目录里的 scene_id 直接切场景）：");
-      caps.scenes.forEach(function (scene) {
-        lines.push("- " + scene.id + "：" + scene.label + "（" + scene.category + "）" +
-          (scene.experimental ? "【实验性·启发式，非官方素材，不要自动选】" : "") +
-          (scene.description ? "；" + scene.description : ""));
-      });
-    }
-    if (caps.catalog_scenes && caps.catalog_scenes.length > 1) {
-      lines.push("场景目录共有 " + caps.catalog_scenes.length + " 个可切换场景（完整描述+whenToUse 见 system prompt 场景目录；不知道时可调用 list_scenes）：" +
-        caps.catalog_scenes.slice(0, 10).map(function (entry) { return entry.scene_label + "(" + entry.scene_id + ")"; }).join("、") + (caps.catalog_scenes.length > 10 ? " 等" : ""));
-    }
-    if (caps.clothing) {
-      lines.push("服装（set_clothing）：" + caps.clothing.param + " 范围 " + caps.clothing.min + "~" + caps.clothing.max +
-        "，其中 " + caps.clothing.dressedValue + "=穿好，" + caps.clothing.nudeValue + "=全裸；中间值的半脱是启发式插值（非官方素材），默认不要主动调用。");
-    }
-    if (caps.accessories && caps.accessories.length) {
-      lines.push("饰品（set_accessory）：" + caps.accessories.map(function (item) { return item.id + "=" + item.label; }).join("，") + "。");
-    }
-    if (caps.motions && caps.motions.total) {
-      lines.push("模型共有 " + caps.motions.total + " 个动作；不知道动作名时可先调用 list_motions（可按前缀 " + (caps.motions.prefixes || []).join("/") + " 过滤），再用 play_motion 精确播放。");
-      if (caps.motions.examples && caps.motions.examples.length) {
-        lines.push("动作示例：" + caps.motions.examples.slice(0, 12).join("、") + "。");
+    var lines = [];
+    // 场景/动作/换装说明只在「AI 自动切换场景」开启时注入，避免关闭后仍引导模型调用工具
+    if (caps.scene_ai_enabled !== false) {
+      lines.push("【当前模型能力（AI 可精确操控）】", "当前模型：" + caps.model_name + "（id=" + caps.model_id + "）。");
+      var current = caps.current_catalog_entry;
+      if (current) {
+        lines.push("当前场景/模型语义：" + current.scene_label + "（" + current.category + "，" + current.kind + (current.nsfw_only ? "，NSFW限定" : "") + "）。" + current.description);
+        lines.push("何时切换到它/使用它：" + current.when_to_use);
       }
+      if (caps.scenes && caps.scenes.length) {
+        lines.push("当前模型的场景（play_scene，play_scene 也可传场景目录里的 scene_id 直接切场景）：");
+        caps.scenes.forEach(function (scene) {
+          lines.push("- " + scene.id + "：" + scene.label + "（" + scene.category + "）" +
+            (scene.experimental ? "【实验性·启发式，非官方素材，不要自动选】" : "") +
+            (scene.description ? "；" + scene.description : ""));
+        });
+      }
+      if (caps.catalog_scenes && caps.catalog_scenes.length > 1) {
+        lines.push("场景目录共有 " + caps.catalog_scenes.length + " 个可切换场景（完整描述+whenToUse 见 system prompt 场景目录；不知道时可调用 list_scenes）：" +
+          caps.catalog_scenes.slice(0, 10).map(function (entry) { return entry.scene_label + "(" + entry.scene_id + ")"; }).join("、") + (caps.catalog_scenes.length > 10 ? " 等" : ""));
+      }
+      if (caps.clothing) {
+        lines.push("服装（set_clothing）：" + caps.clothing.param + " 范围 " + caps.clothing.min + "~" + caps.clothing.max +
+          "，其中 " + caps.clothing.dressedValue + "=穿好，" + caps.clothing.nudeValue + "=全裸；中间值的半脱是启发式插值（非官方素材），默认不要主动调用。");
+      }
+      if (caps.accessories && caps.accessories.length) {
+        lines.push("饰品（set_accessory）：" + caps.accessories.map(function (item) { return item.id + "=" + item.label; }).join("，") + "。");
+      }
+      if (caps.motions && caps.motions.total) {
+        lines.push("模型共有 " + caps.motions.total + " 个动作；不知道动作名时可先调用 list_motions（可按前缀 " + (caps.motions.prefixes || []).join("/") + " 过滤），再用 play_motion 精确播放。");
+        if (caps.motions.examples && caps.motions.examples.length) {
+          lines.push("动作示例：" + caps.motions.examples.slice(0, 12).join("、") + "。");
+        }
+      }
+      lines.push("调用规则：用户明确要求换姿势/换场景/脱衣/穿衣/戴摘眼镜/看某个视角（剖面/抱枕/后位等）时，优先调用对应工具；调用后只用一两句话自然回应，不要解释工具、参数或内部名称。用户没有相关要求时不要调用工具。" +
+        (caps.sfw_active ? "当前 SFW 毛玻璃开启：NSFW 限定场景与辅助剖面模型不可用；用户要求时请提示先开启 NSFW，不要强行调用。" : ""));
     }
-    lines.push("调用规则：用户明确要求换姿势/换场景/脱衣/穿衣/戴摘眼镜/看某个视角（剖面/抱枕/后位等）时，优先调用对应工具；调用后只用一两句话自然回应，不要解释工具、参数或内部名称。用户没有相关要求时不要调用工具。" +
-      (caps.sfw_active ? "当前 SFW 毛玻璃开启：NSFW 限定场景与辅助剖面模型不可用；用户要求时请提示先开启 NSFW，不要强行调用。" : ""));
+    // 缩放说明独立于场景开关：只要管理页允许 AI 控制缩放就注入（用户要求变大/变小时才调用）
+    if (caps.scale && caps.scale.controllable) {
+      var percent = Number(caps.scale.percent);
+      if (!isFinite(percent)) percent = 100;
+      var min = Number(caps.scale.min);
+      if (!isFinite(min)) min = 25;
+      var max = Number(caps.scale.max);
+      if (!isFinite(max)) max = 200;
+      lines.push("桌宠缩放：当前 " + percent + "%，可调用 set_scale 调整 " + min + "%~" + max + "%（用户要求变大/变小时才调用）。");
+    }
     return lines.join("\n");
   }
 

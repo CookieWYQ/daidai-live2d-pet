@@ -927,18 +927,40 @@ function createManagerWindow() {
   managerWindow = new BrowserWindow({
     width: 980,
     height: 720,
-    minWidth: 820,
+    minWidth: 780,
     minHeight: 560,
     show: false,
     title: "Daidai Live2D Pet 管理",
     icon: appIcon(),
+    // 管理窗曾经出现「内容左侧被裁、右侧一块深色空白」：渲染进程页面被 Ctrl+滚轮缩放到
+    // 125% 后 Chromium 只按缩小后的布局视口绘制，窗口剩余区域保持未重绘。这里固定背景色，
+    // 并在每次加载/显示时把页面缩放重置为 1（manager-guard.js 同时拦截 Ctrl+滚轮）。
+    backgroundColor: "#f5f6f8",
     webPreferences: {
       preload: path.join(__dirname, "..", "preload.js"),
       contextIsolation: true,
-      nodeIntegration: false
+      nodeIntegration: false,
+      // 初始缩放固定 100%：页面缩放 !=100% 时 Chromium 会按缩小后的布局视口绘制，
+      // 窗口剩余区域不重绘，表现为“左半边内容被裁、右侧一块空白”。
+      zoomFactor: 1
     }
   });
   managerWindow.loadFile(rendererFile(), { query: { view: "manager" } });
+  const resetManagerZoom = () => {
+    try {
+      if (managerWindow && !managerWindow.isDestroyed()) managerWindow.webContents.setZoomFactor(1);
+    } catch (e) {}
+  };
+  managerWindow.webContents.on("did-finish-load", resetManagerZoom);
+  managerWindow.webContents.on("did-stop-loading", resetManagerZoom);
+  // Ctrl+滚轮/触控板缩放请求：立即复位，管理页不允许页面缩放
+  managerWindow.webContents.on("zoom-changed", resetManagerZoom);
+  // 系统 DPI/显示器缩放变化后 Chromium 可能保留错误的页面缩放，主动复位一次
+  managerWindow.on("resize", () => {
+    try {
+      if (managerWindow.webContents.getZoomFactor() !== 1) managerWindow.webContents.setZoomFactor(1);
+    } catch (e) {}
+  });
   managerWindow.on("close", (event) => {
     if (!app.isQuitting) {
       event.preventDefault();
@@ -949,6 +971,10 @@ function createManagerWindow() {
 
 function showManager() {
   if (!managerWindow || managerWindow.isDestroyed()) createManagerWindow();
+  try {
+    // 兜底：隐藏期间页面缩放被改过，显示前恢复，避免再次出现半幅渲染
+    managerWindow.webContents.setZoomFactor(1);
+  } catch (e) {}
   managerWindow.show();
   managerWindow.focus();
 }
@@ -1239,6 +1265,17 @@ function spokenTextOnly(text) {
 
 function registerIpc() {
   ipcMain.handle("app:get-state", () => rendererPayload());
+  // 管理页渲染兜底：页面若被 Chromium 缩放到 !=100%（Ctrl+滚轮 / DPI 切换），
+  // manager-guard.js 会调用这里复位，避免只绘制半幅内容（用户反馈的裁切/空白问题）。
+  ipcMain.handle("app:reset-manager-zoom", () => {
+    try {
+      if (managerWindow && !managerWindow.isDestroyed()) {
+        managerWindow.webContents.setZoomFactor(1);
+        return { ok: true, zoomFactor: managerWindow.webContents.getZoomFactor() };
+      }
+    } catch (e) {}
+    return { ok: false };
+  });
   ipcMain.handle("app:renderer-error", (_event, payload) => {
     try {
       const file = path.join(app.getPath("userData"), "renderer-error.log");
@@ -1751,8 +1788,10 @@ function registerIpc() {
         characterName: activeCharacter ? activeCharacter.name : "",
         promptSource: activeCharacter && activeCharacter.prompt ? activeCharacter.promptSource : "fallback"
       });
-      // 场景协议 + 能力简报：仅在“AI 自动切换场景”开启时注入 system prompt
+      // 场景协议 + 能力简报：场景说明仅在“AI 自动切换场景”开启时注入；
+      // AI 缩放开关独立（默认关闭）：开启时也注入 caps.brief（其中含 set_scale 说明）
       const sceneAiEnabled = config.sceneAutoEnabled !== false && Boolean(scenesConfig);
+      const scaleEnabled = Boolean(config.aiControl && config.aiControl.scaleEnabled === true);
       // 工具 schema 来自渲染进程上报的当前模型能力（模型无关：换模型后 schema 自动变化）
       const caps = lastCapabilities && lastCapabilities.model_id === (config.selectedModelId || "") ? lastCapabilities : null;
       const baseScenePrompt = sceneAiEnabled
@@ -1762,10 +1801,11 @@ function registerIpc() {
       const catalogPrompt = sceneAiEnabled
         ? buildCatalogPrompt(sceneCatalog, { currentModelId: config.selectedModelId || "", sfw: currentSfw() })
         : "";
-      const systemPrompt = sceneAiEnabled && (catalogPrompt || (caps && caps.brief))
+      const systemPrompt = (sceneAiEnabled || scaleEnabled) && (catalogPrompt || (caps && caps.brief))
         ? [baseScenePrompt, catalogPrompt, caps && caps.brief].filter(Boolean).join("\n\n")
         : baseScenePrompt;
-      let useTools = Boolean(sceneAiEnabled && caps && Array.isArray(caps.tools) && caps.tools.length && !toolsUnsupported);
+      // 工具由渲染进程按「场景开关 / 缩放开关」过滤：两者都关时为空数组 → 不开启 function calling
+      let useTools = Boolean(caps && Array.isArray(caps.tools) && caps.tools.length && !toolsUnsupported);
       const tools = useTools ? caps.tools : null;
       const conversation = [{ role: "system", content: systemPrompt }].concat(messages || []);
       const toolResults = [];

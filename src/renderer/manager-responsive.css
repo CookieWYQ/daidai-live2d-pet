@@ -1,0 +1,149 @@
+/* 管理页响应式 / 渲染兜底（2026-11 用户反馈：左侧标签被裁切、右侧深色空白、快速档位中文竖排）
+   背景：管理窗页面被 Chromium 缩放到 125%（Ctrl+滚轮或 DPI 切换）后，布局视口只有约 772 CSS px，
+   styles.css 里按 966px 设计的双栏网格被压窄，快速档位按钮把标签列挤成 20px 宽 → 中文竖排；
+   main-panel 同时出现横向滚动，焦点落到右侧输入框时视图被横向滚走 → 左侧文字被裁。
+   这里用“仅管理页存在”的 class 作用域做覆盖，不改桌宠窗布局。 */
+
+/* ---------- 通用：任何宽度下都不产生横向溢出 ---------- */
+.manager-shell {
+  min-width: 0;
+}
+.main-panel {
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.main-panel > * {
+  min-width: 0;
+}
+.setting-row,
+.model-row,
+.sound-row {
+  min-width: 0;
+}
+.setting-row > span,
+.setting-row > strong,
+.setting-row > label {
+  min-width: 0;
+}
+.setting-row strong,
+.setting-row .muted,
+.model-row .muted,
+.sound-row .muted {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 快速档位：预设按钮最多占 1.6fr，允许换行，标签列保底 160px，杜绝竖排 */
+.scale-presets-row {
+  grid-template-columns: minmax(160px, 1fr) minmax(0, 1.6fr);
+}
+.scale-presets-row .scale-presets {
+  justify-content: flex-start;
+  min-width: 0;
+}
+.scale-control {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 0;
+}
+.scale-control input[type="range"] {
+  /* 用固定宽度（而不是 min(200px,100%)）参与网格 max-content 计算，
+     否则窄窗口下 range 被算成 200px 的“上限”，数字框会被挤到第二行 */
+  width: 200px;
+  max-width: 100%;
+  min-width: 120px;
+  flex: 0 1 200px;
+}
+.scale-control input[type="number"] {
+  width: 74px;
+  max-width: 100%;
+}
+
+/* ---------- 中等宽度：侧栏收窄 ---------- */
+@media (max-width: 1050px) {
+  .manager-shell {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+  .sidebar {
+    padding: 16px;
+  }
+  .main-panel {
+    padding: 18px;
+  }
+  .scale-presets-row {
+    grid-template-columns: minmax(140px, 1fr) minmax(0, 1.4fr);
+  }
+}
+
+/* ---------- 窄窗口 / 125% 页面缩放：侧栏变顶部条，内容单列 ---------- */
+@media (max-width: 900px) {
+  .manager-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sidebar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+  }
+  .sidebar h1 {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .sidebar p {
+    display: none;
+  }
+  .main-panel {
+    padding: 14px;
+  }
+  .hotkey-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sound-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sound-row button {
+    width: fit-content;
+  }
+}
+
+/* ---------- 极窄：所有设置行改为上下堆叠，控件占满整行 ---------- */
+@media (max-width: 760px) {
+  .setting-row,
+  .model-row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .setting-row > :last-child,
+  .model-row > :last-child {
+    justify-self: stretch;
+  }
+  .scale-presets-row,
+  .chat-settings .settings-grid,
+  .chat-settings .setting-row:has(input[type="number"]),
+  .chat-settings .setting-row:has(select) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .scale-control {
+    justify-content: flex-start;
+  }
+  .scale-presets {
+    justify-content: flex-start !important;
+  }
+  .hotkey-step {
+    flex-wrap: wrap;
+  }
+  .toolbar button {
+    flex: 1 1 auto;
+  }
+}
+
+/* 深色侧栏顶部条在窄屏下保持白字可读（原来靠列宽撑满高度） */
+@media (max-width: 900px) {
+  .sidebar {
+    background: #111827;
+  }
+}

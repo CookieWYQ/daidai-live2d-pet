@@ -501,12 +501,12 @@ body.sfw-on #live2d-canvas {
 }
 
 
-/* Tavern chat input bar */
+/* Tavern chat input bar：位置/宽度由 app.js 写入（百分比保存，可拖动 ⠿ 把手） */
 .tavern-bar {
   position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: var(--overlay-input-left, 50%);
+  top: var(--overlay-input-top, 92%);
+  transform: translate(-50%, -50%);
   display: flex;
   gap: 6px;
   align-items: center;
@@ -514,7 +514,7 @@ body.sfw-on #live2d-canvas {
   backdrop-filter: blur(12px);
   border-radius: 10px;
   padding: 6px 10px;
-  width: 280px;
+  width: var(--overlay-input-width, 72%);
   max-width: calc(100vw - 40px);
   z-index: 20;
   pointer-events: all;
@@ -567,6 +567,27 @@ body.sfw-on #live2d-canvas {
 .tavern-bar button:disabled {
   opacity: 0.35;
   cursor: not-allowed;
+}
+
+/* 聊天输入条拖动把手（⠿）：按住拖动输入框，位置按窗口百分比保存 */
+.overlay-grip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 28px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+  line-height: 1;
+  cursor: grab;
+  user-select: none;
+}
+
+.overlay-grip:hover {
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* ==============================
@@ -952,22 +973,28 @@ body.scenes-body {
   margin-top: 2px;
 }
 
-/* 宠物窗：文字气泡（TTS 未配置/失败时也能看到回复） */
+/* 宠物窗：文字气泡（跟随模型头顶 / 拖动后固定百分比位置）
+   left/top 由 app.js applyOverlayLayout 按 --overlay-bubble-* 或 follow 锚点写入 px。
+   follow：气泡堆叠底部对齐模型头顶（translate(-50%,-100%)）；manual：中心定位。 */
 .chat-bubble-stack {
   position: absolute;
-  left: 50%;
-  bottom: 58px;
-  transform: translateX(-50%);
-  width: min(92%, 340px);
+  left: var(--overlay-bubble-left, 50%);
+  top: var(--overlay-bubble-top, 18%);
+  width: var(--overlay-bubble-width, 78%);
+  max-width: calc(100% - 12px);
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   gap: 6px;
   z-index: 18;
   pointer-events: none;
 }
+.chat-bubble-stack.overlay-follow {
+  transform: translate(-50%, -100%);
+}
 .chat-bubble {
   pointer-events: auto;
-  cursor: pointer;
+  cursor: grab;
   background: rgba(16, 18, 28, 0.88);
   border: 1px solid rgba(120, 150, 255, 0.28);
   border-radius: 12px;
@@ -977,6 +1004,10 @@ body.scenes-body {
   backdrop-filter: blur(8px);
   animation: chat-bubble-in 180ms ease-out;
   transition: opacity 220ms ease, transform 220ms ease;
+}
+.chat-bubble-stack.dragging,
+.chat-bubble-stack.dragging .chat-bubble {
+  cursor: grabbing;
 }
 .chat-bubble.leaving {
   opacity: 0;
@@ -1004,17 +1035,19 @@ body.scenes-body {
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-word;
-  max-height: 132px;
-  overflow: hidden;
+  /* 长文本在气泡内滚动，避免气泡高到超出宠物窗口 */
+  max-height: 40vh;
+  overflow-y: auto;
 }
 
-/* 宠物窗：聊天记录面板（右侧滑入，可关闭不挡模型） */
+/* 宠物窗：聊天记录面板（位置/尺寸按窗口百分比保存，可拖标题栏移动，可关闭不挡模型） */
 .chat-panel {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  bottom: 8px;
-  width: min(320px, 86%);
+  left: var(--overlay-panel-left, 78%);
+  top: var(--overlay-panel-top, 50%);
+  width: var(--overlay-panel-width, 84%);
+  height: var(--overlay-panel-height, 88%);
+  transform: translate(-50%, -50%);
   background: rgba(12, 14, 22, 0.94);
   border: 1px solid rgba(120, 150, 255, 0.22);
   border-radius: 14px;
@@ -1023,14 +1056,15 @@ body.scenes-body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transform: translateX(calc(100% + 16px));
+  /* 独立的 translate 属性负责滑入动画，与居中 transform 互不干扰 */
+  translate: calc(100% + 16px) 0;
   opacity: 0;
   pointer-events: none;
-  transition: transform 220ms ease, opacity 220ms ease;
+  transition: translate 220ms ease, opacity 220ms ease;
   z-index: 24;
 }
 .chat-panel.open {
-  transform: none;
+  translate: 0 0;
   opacity: 1;
   pointer-events: auto;
 }
@@ -1040,6 +1074,12 @@ body.scenes-body {
   gap: 8px;
   padding: 10px 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: grab;
+}
+.chat-panel.dragging .chat-panel-head,
+.chat-panel.dragging .chat-panel-head strong,
+.chat-panel.dragging .chat-panel-head span {
+  cursor: grabbing;
 }
 .chat-panel-head strong {
   font-size: 13px;
@@ -1133,4 +1173,17 @@ body.scenes-body {
 .chat-panel-foot button:hover {
   border-color: #f87171;
   color: #f87171;
+}
+
+/* 悬浮层拖动中：禁止选中文字，可拖区域统一抓手光标 */
+body.overlay-dragging,
+body.overlay-dragging * {
+  user-select: none;
+}
+body.overlay-dragging .chat-bubble-stack,
+body.overlay-dragging .chat-bubble,
+body.overlay-dragging .tavern-bar,
+body.overlay-dragging .overlay-grip,
+body.overlay-dragging .chat-panel-head {
+  cursor: grabbing !important;
 }

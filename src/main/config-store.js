@@ -43,6 +43,16 @@ const HOTKEY_ACTIONS = [
   { id: "openManager", name: "打开管理面板", detail: "设置、模型、角色卡" }
 ];
 
+// 聊天悬浮层默认布局：x/y 为相对 pet-stage 的百分比中心点，width/height 为百分比尺寸。
+// bubble.mode：follow = 气泡跟随模型头顶（默认，不挡模型）；manual = 固定在保存的百分比位置。
+const DEFAULT_OVERLAY = {
+  locked: false,
+  bubble: { mode: "follow", x: 50, y: 18, width: 78 },
+  input: { x: 50, y: 92, width: 72 },
+  panel: { x: 78, y: 50, width: 84, height: 88 }
+};
+const OVERLAY_BUBBLE_MODES = ["follow", "manual"];
+
 // 聊天文本输出：always = 始终显示文本气泡；when-tts-off = 仅 TTS 未配置/失败时显示；off = 只记录不显示
 const CHAT_TEXT_MODES = ["always", "when-tts-off", "off"];
 const DEFAULT_CHAT = {
@@ -62,6 +72,10 @@ const DEFAULT_CONFIG = {
   sfwBlur: 22,
   // 场景系统：AI 对话内容自动切换动作/场景（托盘菜单可关；离线场景面板不受影响）
   sceneAutoEnabled: true,
+  // AI 控制：允许 AI 在聊天中调整桌宠缩放（默认关闭，防止 AI 擅自改窗口大小）
+  aiControl: { scaleEnabled: false },
+  // 聊天悬浮层：气泡/输入条/聊天记录面板的相对位置与尺寸（管理页可重置）
+  overlay: DEFAULT_OVERLAY,
   // 模型库根目录（本机示例：["D:\\live2d\\live2d_models"]）。为空 = 不扫描模型库，可手工导入单个模型。
   modelLibraryRoots: [],
   soundActions: {
@@ -123,6 +137,15 @@ function writeJson(file, value) {
   fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
+// 把悬浮层百分比数值限制在 [min,max]；非法值（null/空串/非数字）回落到 fallback。
+// 保留两位小数，避免拖动保存时产生超长浮点尾巴。
+function clampPercent(value, min, max, fallback) {
+  if (value === null || value === undefined || value === "") return fallback;
+  const num = Number(value);
+  if (!Number.isFinite(num)) return fallback;
+  return Math.min(max, Math.max(min, Math.round(num * 100) / 100));
+}
+
 function mergeConfig(current, patch) {
   const next = {
     ...DEFAULT_CONFIG,
@@ -156,6 +179,42 @@ function mergeConfig(current, patch) {
   next.sfwBlur = Math.min(40, Math.max(8, Number(next.sfwBlur || DEFAULT_CONFIG.sfwBlur)));
   // AI 自动场景开关同样只接受布尔值
   next.sceneAutoEnabled = next.sceneAutoEnabled !== false;
+  // AI 控制开关：只接受布尔值，默认关闭（允许 AI 调整缩放需用户明确开启）
+  next.aiControl = {
+    ...DEFAULT_CONFIG.aiControl,
+    ...(current && current.aiControl),
+    ...(patch && patch.aiControl)
+  };
+  next.aiControl.scaleEnabled = next.aiControl.scaleEnabled === true;
+  // 聊天悬浮层：逐字段合并 + clamp；缺失字段回落到默认，patch 只传子对象也不丢其它配置
+  const overlayCurrent = (current && current.overlay) || {};
+  const overlayPatch = (patch && patch.overlay) || {};
+  const overlaySource = {
+    locked: overlayPatch.locked !== undefined ? overlayPatch.locked : overlayCurrent.locked,
+    bubble: { ...DEFAULT_OVERLAY.bubble, ...(overlayCurrent.bubble || {}), ...(overlayPatch.bubble || {}) },
+    input: { ...DEFAULT_OVERLAY.input, ...(overlayCurrent.input || {}), ...(overlayPatch.input || {}) },
+    panel: { ...DEFAULT_OVERLAY.panel, ...(overlayCurrent.panel || {}), ...(overlayPatch.panel || {}) }
+  };
+  next.overlay = {
+    locked: overlaySource.locked === true,
+    bubble: {
+      mode: OVERLAY_BUBBLE_MODES.includes(overlaySource.bubble.mode) ? overlaySource.bubble.mode : DEFAULT_OVERLAY.bubble.mode,
+      x: clampPercent(overlaySource.bubble.x, 0, 100, DEFAULT_OVERLAY.bubble.x),
+      y: clampPercent(overlaySource.bubble.y, 0, 100, DEFAULT_OVERLAY.bubble.y),
+      width: clampPercent(overlaySource.bubble.width, 25, 96, DEFAULT_OVERLAY.bubble.width)
+    },
+    input: {
+      x: clampPercent(overlaySource.input.x, 0, 100, DEFAULT_OVERLAY.input.x),
+      y: clampPercent(overlaySource.input.y, 0, 100, DEFAULT_OVERLAY.input.y),
+      width: clampPercent(overlaySource.input.width, 25, 96, DEFAULT_OVERLAY.input.width)
+    },
+    panel: {
+      x: clampPercent(overlaySource.panel.x, 0, 100, DEFAULT_OVERLAY.panel.x),
+      y: clampPercent(overlaySource.panel.y, 0, 100, DEFAULT_OVERLAY.panel.y),
+      width: clampPercent(overlaySource.panel.width, 25, 96, DEFAULT_OVERLAY.panel.width),
+      height: clampPercent(overlaySource.panel.height, 35, 96, DEFAULT_OVERLAY.panel.height)
+    }
+  };
   // 桌宠缩放：默认 100%，限制 25%~200%（按 1% 取整，避免浮点误差累积）
   next.petScale = Math.round(Math.min(PET_SCALE_MAX, Math.max(PET_SCALE_MIN, Number(next.petScale || 1))) * 100) / 100;
   next.showBackground = next.showBackground === true;
@@ -215,6 +274,7 @@ module.exports = {
   DEFAULT_CONFIG,
   DEFAULT_CHAT,
   DEFAULT_HOTKEYS,
+  DEFAULT_OVERLAY,
   HOTKEY_ACTIONS,
   CHAT_TEXT_MODES,
   MIN_PET_WINDOW,

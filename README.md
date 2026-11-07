@@ -4,9 +4,9 @@
 [![Node.js 18+](https://img.shields.io/badge/node-18%2B-green.svg)](https://nodejs.org/)
 [![Electron](https://img.shields.io/badge/electron-42-9feaf9.svg)](https://www.electronjs.org/)
 
-开箱即用的 Live2D 桌面宠物：Electron 透明宠物窗 + 系统托盘 + 后台管理 + 多模型导入 + AI 会话状态提醒 + 角色聊天 + TTS 语音 + 口型同步 + 动作/场景系统。
+开箱即用的 Live2D 桌面宠物：Electron 透明宠物窗 + 系统托盘 + 后台管理 + 多模型导入 + AI 会话状态提醒 + 角色聊天 + TTS 语音 + 口型同步 + 动作/场景系统 + 可拖动聊天悬浮层。
 
-> 本项目基于 [Rosa134/daidai-live2d-pet](https://github.com/Rosa134/daidai-live2d-pet)（MIT）继续开发，新增了 **全局快捷键 / 25%~200% 精细缩放 / 聊天文本输出与历史记录 / 角色卡与场景目录** 等能力。
+> 本项目基于 [Rosa134/daidai-live2d-pet](https://github.com/Rosa134/daidai-live2d-pet)（MIT）继续开发，新增了 **全局快捷键 / 25%~200% 精细缩放 / 聊天文本输出与历史记录 / 角色卡与场景目录 / 可拖动聊天悬浮层 / AI 控制缩放** 等能力。
 > 仓库**不包含任何 Live2D 模型文件**：模型只从本地模型库或管理页导入，请自行确认模型授权。
 
 ## 截图
@@ -19,12 +19,22 @@
 |---|---|
 | ![聊天设置](docs/images/chat-settings.png) | ![聊天面板](docs/images/chat-panel.png) |
 
+| 桌宠：文字气泡贴模型头顶（不遮挡） | 管理页：聊天悬浮层（拖动位置百分比保存） |
+|---|---|
+| ![气泡贴头顶](docs/images/bubble-follow.png) | ![悬浮层设置](docs/images/overlay-settings.png) |
+
+| 管理页：允许 AI 控制缩放（默认关） | 管理页：窄窗口 / 高 DPI 响应式布局 |
+|---|---|
+| ![AI 控制缩放](docs/images/ai-scale.png) | ![窄窗口布局](docs/images/manager-responsive.png) |
+
 ## ✨ 特性
 
 - **角色聊天** — 底部输入框直接和角色聊天，OpenAI 兼容接口（默认 DeepSeek），和 Codex/Claude 状态提醒互不干扰
+- **可拖动聊天悬浮层** — 文字气泡默认贴在模型头顶（跟随模型、不挡画面）；气泡、输入框、聊天记录面板都能自由拖动，位置按宠物窗口百分比保存；管理页可一键重置、可关闭「跟随模型头顶」
 - **聊天文本 + 历史记录** — TTS 只是增强：没有配置 TTS Token 时也会显示文字气泡，并可随时打开聊天记录面板、按角色持久化保存
 - **角色卡 → 模型 → 场景 → 动作** — 每个角色一张提示词，一个角色可包含多个模型；每个模型下再分场景/动作，聊天时按当前模型自动取角色卡
 - **精细缩放** — 25%~200% 任意百分比（1% 步进），9 档快捷档位，`Ctrl+滚轮` 微调，全局快捷键 ±5% / ±1%
+- **AI 控制缩放（可选）** — 管理页开启「允许 AI 控制桌宠缩放」后，AI 可在聊天中按你的要求调用 `set_scale` 把桌宠调到 25%~200%；默认关闭，关闭时 AI 不会改缩放
 - **全局快捷键** — 10 个动作可自定义/录制：缩放、重置 100%、SFW/NSFW、总在最前、显示/隐藏、聊天面板、管理面板；冲突检测 + 注册失败自动回滚旧键
 - **系统托盘** — 显示/隐藏宠物、SFW 开关、置顶开关、打开管理、退出
 - **AI 状态联动** — 监听 Codex / Claude Code 会话，自动切换 Live2D 动作（思考/工作/回复/待机）
@@ -81,6 +91,7 @@ npm start
 - **1% 粒度**：滑块和数字框可精确到 1%；`Ctrl+滚轮` 在宠物窗上 ±1%（按住 `Shift` ±5%）
 - **9 个快捷档位**：25% / 50% / 75% / 100% / 125% / 150% / 175% / 200% / 适应屏幕
 - 窗口按底边中心缩放，不会跑出屏幕工作区；窗口尺寸上限受屏幕限制时，管理页会提示「实际显示 N%」
+- **AI 控制缩放（默认关闭）**：管理页「应用设置 → 允许 AI 控制桌宠缩放」。开启后 AI 能力清单多一个 `set_scale` 工具（25%~200%，整数百分比），聊天里说「变大一点 / 缩到 80%」就会生效，并弹出「桌宠缩放 N%」提示；关闭后工具从 schema 中消失，执行器也会拒绝调用
 
 ## 全局快捷键
 
@@ -110,10 +121,17 @@ npm start
 TTS 是可选增强，文字输出始终可用：
 
 - **三种文本模式**：总是显示文字气泡（语音照常播放）/ 仅 TTS 未配置或失败时显示 / 只用语音不显示
-- **文字气泡**：显示在角色下方，点击气泡直接打开聊天记录面板；气泡停留时长可配置（1.5~60 秒，语音播放时不会提前消失）
-- **聊天记录面板**：桌宠右侧滑入，按角色分组，显示「我 / 角色名 + 时间」，可滚动查看、一键清空；快捷键 `Ctrl+Alt+C`
+- **文字气泡**：默认贴在模型头顶（按模型实际绘制内容的包围盒定位，不遮挡人物），可点击直接打开聊天记录面板；停留时长可配置（1.5~60 秒，语音播放时不会提前消失）
+- **可拖动布局**：按住文字气泡即可拖动；输入条左侧 `⠿` 把手可拖动输入框；聊天记录面板可拖标题栏移动。位置按宠物窗口的百分比保存（窗口缩放后相对位置不变），管理页「聊天悬浮层」可恢复「跟随模型头顶」或一键重置全部位置
+- **聊天记录面板**：默认在宠物窗右侧，按角色分组，显示「我 / 角色名 + 时间」，可滚动查看、一键清空；快捷键 `Ctrl+Alt+C`
 - **持久化**：写入 `user-data/chat-history.json`，重启后仍在；每个角色保留最近 N 条（20~2000，默认 300），可关闭持久化
 - TTS Token 配置后，语音照常播放并驱动口型/说话动作，文字气泡可同时显示
+
+## 界面渲染与高 DPI
+
+- 管理窗**禁止页面缩放**（Ctrl+滚轮 / 触控板缩放会被拦截），加载/显示/显示器 DPI 变化时会自动把页面缩放复位到 100%，避免 Chromium 只绘制半幅内容导致的「左侧被裁、右侧空白」
+- 管理窗布局是响应式的：窗口变窄时侧栏收为顶部条、设置行自动堆叠、快捷档位按钮换行；125% 页面缩放或 780px 窄窗口下也不会出现中文竖排/横向溢出
+- 桌宠窗本身按屏幕工作区 clamp，缩放、置顶、透明背景、点击/拖动互动互不影响
 
 ## 配置密钥
 
@@ -164,7 +182,7 @@ Claude Code 用户：参考 [ClaudePet](https://github.com/liuchenlili/ClaudePet
 
 ```bash
 npm install
-npm test          # 单元测试（config-store / chat-history / scene / status 等）
+npm test          # 单元测试（config-store / chat-history / scene / ai-control / status 等）
 npm run doctor    # 检查关键文件
 npm start         # 启动应用
 npm run dev       # 开发模式（带 DevTools）
@@ -180,6 +198,14 @@ node scripts/ui-check.mjs --port=9333 --out=../screenshots/v2
 ```
 
 脚本会验证：10 个快捷键注册与动作、25% 档位 / 100% 重置、SFW/置顶切换、TTS 未配置时的文字气泡、聊天记录落盘、管理页控件，并保存截图。
+
+悬浮层 + AI 缩放端到端自检（CDP + 本地 mock LLM，不消耗真实 API）：
+
+```powershell
+node scripts/verify-overlay-ai.mjs --port=9333
+```
+
+验证内容：文字气泡 follow 头顶锚点、拖动气泡/输入条/记录面板后百分比落盘、拖动不带动宠物窗；`set_scale` 能力 schema、执行器开关校验、mock LLM tool_calls 全链路、关闭开关后拒绝调用；结果写入 `screenshots/overlay/overlay_ai_verify.json`。
 
 ### 项目结构
 
@@ -199,9 +225,11 @@ node scripts/ui-check.mjs --port=9333 --out=../screenshots/v2
 │   │   ├── status-poller.js     # 状态轮询 + 归一化
 │   │   └── codex-session-monitor.js # Codex JSONL 监听
 │   ├── renderer/           # 渲染进程
-│   │   ├── app.js              # Live2D、气泡、状态、聊天、TTS、口型、交互
+│   │   ├── app.js              # Live2D、悬浮层、气泡、状态、聊天、TTS、口型、交互
 │   │   ├── index.html          # 入口（管理窗 + 宠物窗）
 │   │   ├── styles.css          # 样式（含聊天气泡/面板、快捷键设置）
+│   │   ├── manager-responsive.css # 管理页响应式 / 窄窗口 / 高 DPI 兜底
+│   │   ├── manager-guard.js    # 管理页禁止页面缩放 + 异常缩放复位
 │   │   ├── scenes.html/js      # 动作与场景面板
 │   │   └── vendor/             # PIXI + Cubism runtime
 │   └── preload.js          # contextBridge IPC
