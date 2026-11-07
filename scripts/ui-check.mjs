@@ -122,6 +122,10 @@ async function main() {
 
   // 2. 快捷键动作：先用 520×720 的干净基准隔离「屏幕尺寸限制」，否则真实 base 偏大时会按工作区回退
   const originalPetScale = await pet.evaluate("window.daidaiPet.getState().then(s => s.config.petScale)");
+  // 测试纪律（用户要求）：始终 SFW 强模糊 + 关闭声音；截图不可辨认
+  const originalSafety = await pet.evaluate("window.daidaiPet.getState().then(s => ({ nsfwMode: s.config.nsfwMode, sfwBlur: s.config.sfwBlur, soundEnabled: s.config.soundEnabled }))");
+  await pet.evaluate("window.daidaiPet.setConfig({ nsfwMode: false, sfwBlur: 72, soundEnabled: false })");
+  await sleep(600);
   const boundsSnapshot = await pet.evaluate("window.daidaiDebug.petBounds()");
   const originalBase = (boundsSnapshot && boundsSnapshot.petScale && boundsSnapshot.petScale.base) || null;
   await pet.evaluate("window.daidaiDebug.setScaleBase({ width: 520, height: 720 })");
@@ -230,6 +234,7 @@ async function main() {
     await sleep(300);
   }
   await pet.evaluate(`window.daidaiPet.setConfig({ petScale: ${originalPetScale} })`);
+  await pet.evaluate(`window.daidaiPet.setConfig({ nsfwMode: ${JSON.stringify(originalSafety.nsfwMode)}, sfwBlur: ${JSON.stringify(originalSafety.sfwBlur)}, soundEnabled: ${JSON.stringify(originalSafety.soundEnabled)} })`);
   await pet.evaluate("window.daidaiPet.clearChatHistory()");
   await pet.evaluate("window.daidaiDebug.triggerHotkey('toggleChat')");
   await sleep(500);

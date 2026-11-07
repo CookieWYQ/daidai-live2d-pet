@@ -206,10 +206,10 @@ npm run pack      # 打包到 dist/win-unpacked/（仅解包目录）
 npm run dist      # 构建 Windows 便携版 exe
 ```
 
-UI 自检（需要调试端口，会自行启动 mock LLM，不消耗真实 API）：
+UI 自检（需要调试端口，会自行启动 mock LLM；必须加 `--sfw` 强制 SFW 强模糊、测试中自动关闭声音，不消耗真实 API）：
 
 ```powershell
-$env:DAIDAI_DEBUG_HOOKS="1"; $env:DAIDAI_DEBUG_PORT="9333"; npm start
+$env:DAIDAI_DEBUG_HOOKS="1"; $env:DAIDAI_DEBUG_PORT="9333"; npm start -- --sfw
 node scripts/ui-check.mjs --port=9333 --out=../screenshots/v2
 ```
 
