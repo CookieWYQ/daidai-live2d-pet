@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; img-src 'self' file: data:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daidai Live2D Pet</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./models-ui.css" />
+  <link rel="stylesheet" href="./task13-ui.css" />
+  <link rel="stylesheet" href="./character-ui.css" />
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- 双运行时：官方 Cubism2 runtime + Cubism Core/4 + pixi-live2d-display 合并构建
+       live2d-display.min.js 同时包含 Cubism2 / Cubism3-4 两种模型工厂，
+       由 Live2DModel.from(settings) 依据模型版本自动选择（覆盖 45 个 C3 + 18 个 C2，共 63 个模型）。 -->
+  <script src="./vendor/pixi.min.js"></script>
+  <script src="./vendor/live2d.min.js"></script>
+  <script src="./vendor/live2dcubismcore.min.js"></script>
+  <script src="./vendor/live2d-display.min.js"></script>
+  <script src="./ai-control.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

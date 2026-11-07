@@ -1,0 +1,155 @@
+/* task-13：场景目录面板 / 辅助模型 / 缩放 / 背景开关样式 */
+.scenes-body .scene-catalog {
+  margin: 18px 0 10px;
+}
+.scene-catalog-head {
+  margin-bottom: 8px;
+}
+.scene-catalog-head h2 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+.scene-current-desc {
+  padding: 10px 12px;
+  margin: 8px 0;
+  border-left: 3px solid #6ea8fe;
+  background: rgba(110, 168, 254, 0.1);
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.scene-sfw-hint {
+  padding: 8px 12px;
+  margin: 8px 0;
+  border-radius: 6px;
+  background: rgba(255, 196, 0, 0.12);
+  border: 1px solid rgba(255, 196, 0, 0.35);
+  font-size: 12px;
+}
+.scene-game {
+  margin: 14px 0 6px;
+}
+.scene-game h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+  padding-bottom: 4px;
+}
+.scene-character {
+  margin: 6px 0 10px;
+}
+.scene-character h4 {
+  margin: 8px 0 4px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+.scene-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+}
+.catalog-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  background: rgba(30, 34, 46, 0.55);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+.catalog-card:hover {
+  border-color: #6ea8fe;
+  transform: translateY(-1px);
+}
+.catalog-card.current {
+  border-color: #4ade80;
+  box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.4) inset;
+}
+.catalog-card.blocked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.catalog-label {
+  font-weight: 700;
+  font-size: 14px;
+}
+.catalog-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.catalog-desc {
+  font-size: 12px;
+  line-height: 1.45;
+  opacity: 0.9;
+}
+.catalog-when {
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0.72;
+}
+.current-model-scenes {
+  margin-top: 20px;
+  border-top: 1px dashed rgba(128, 128, 128, 0.35);
+  padding-top: 12px;
+}
+.scenes-strip {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin: 6px 0 10px;
+  flex-wrap: wrap;
+}
+.exp-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  margin-left: 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.6);
+  background: rgba(251, 191, 36, 0.12);
+  vertical-align: middle;
+}
+.scene-btn.experimental {
+  border-style: dashed;
+  border-color: rgba(251, 191, 36, 0.55);
+}
+.pill.kind-aux {
+  background: rgba(255, 170, 90, 0.18);
+  color: #ffc58a;
+}
+.pill.kind-nsfw {
+  background: rgba(255, 110, 150, 0.16);
+  color: #ff9eb8;
+}
+.pill.kind-cg {
+  background: rgba(180, 150, 255, 0.16);
+  color: #c9b3ff;
+}
+.scale-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 160px;
+}
+.scale-control input[type="range"] {
+  width: 120px;
+}
+/* 默认完全透明；管理页「显示背景」开关打开时才给半透明底板（不显示模型内嵌背景） */
+.pet-body {
+  background: transparent;
+}
+.pet-body.show-background .pet-stage {
+  background: rgba(18, 20, 30, 0.55);
+  border-radius: 10px;
+}
+.pet-body.show-background #live2d-canvas {
+  border-radius: 10px;
+}

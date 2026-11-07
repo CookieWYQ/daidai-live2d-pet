@@ -1,0 +1,20 @@
+node_modules/
+dist/
+out/
+coverage/
+*.log
+.DS_Store
+Thumbs.db
+
+# Electron / 用户运行时数据：配置、API Key、聊天记录、导入模型、缓存全部不进仓库
+user-data/
+userData/
+*.local.json
+
+# 导入的角色模型默认不提交（版权原因），需要时手动添加并附 License 说明
+assets/models/*
+!assets/models/.gitkeep
+
+# 本地开发上下文（含私有路径说明），不进入公开仓库
+AI_CONTEXT.md
+CLAUDE.md

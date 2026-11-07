@@ -1,0 +1,377 @@
+{
+  "version": 1,
+  "description": "桌宠动作/场景配置（可编辑）。分类顺序：换装/亲密 > 情绪 > 日常。场景可包含动作、原声、参数覆盖（如脱衣参数过渡）；关键词用于 AI 回复/用户指令的离线匹配。",
+  "defaults": {
+    "transitionMs": 900,
+    "cooldownMs": 6000,
+    "priorityCooldownMs": 15000,
+    "categoryOrder": ["换装", "亲密", "情绪", "日常", "其他"]
+  },
+  "ai": {
+    "enabled": true,
+    "tagPrefix": "[scene:",
+    "tagSuffix": "]",
+    "cooldownMs": 6000,
+    "priorityCooldownMs": 15000,
+    "maxScenesPerReply": 1
+  },
+  "models": {
+    "tachie-ani": {
+      "displayName": "初冬暖阳R · tachie_ani（こはる）",
+      "display": { "scale": null },
+      "capabilities": {
+        "undress": {
+          "supported": true,
+          "kind": "param",
+          "param": "Param",
+          "from": 0,
+          "to": 30,
+          "note": "Param=0 全身校服，Param=30 全裸，中间值衣服平滑淡出；tFRM_008~016 动作为裸体状态、tFRM_001~007 为穿衣状态（游戏内切镜，无过渡帧，过渡由本场景参数动画补足）"
+        },
+        "dress": { "supported": true, "kind": "param", "param": "Param", "from": 30, "to": 0 },
+        "accessory": { "supported": false, "note": "无眼镜/饰品穿脱动作" }
+      },
+      "resetParams": { "Param": 0 },
+      "aiControl": {
+        "clothing": { "param": "Param", "min": 0, "max": 30, "dressedValue": 0, "nudeValue": 30, "note": "0=全身校服，30=全裸，中间值为衣服淡出过渡" },
+        "accessories": [],
+        "motionPrefixes": ["OP_", "SJ_", "tFRM_", "uFRG_", "vtaneG_", "zED_"]
+      },
+      "scenes": [
+        {
+          "id": "daily_hello",
+          "label": "打招呼",
+          "category": "日常",
+          "priority": 1,
+          "keywords": ["你好", "您好", "早上好", "晚上好", "嗨", "哈喽", "hi", "hello", "こんにちは", "こんばんは", "おはよう", "ただいま", "我回来了"],
+          "motions": ["OP_001_voice"],
+          "sound": "auto",
+          "hint": "挥手式问候动作 + 模型原声"
+        },
+        {
+          "id": "daily_self_intro",
+          "label": "自我介绍",
+          "category": "日常",
+          "priority": 1,
+          "keywords": ["你叫什么", "你是谁", "自我介绍", "名字", "初次见面", "はじめまして", "名前", "だれ"],
+          "motions": ["OP_002_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "daily_bye",
+          "label": "道别",
+          "category": "日常",
+          "priority": 1,
+          "keywords": ["再见", "拜拜", "我走了", "回家", "改天见", "またね", "バイバイ", "帰る", "じゃあね"],
+          "motions": ["SJ_002_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "daily_goodnight",
+          "label": "晚安",
+          "category": "日常",
+          "priority": 1,
+          "keywords": ["晚安", "睡觉", "睡了", "困了", "おやすみ", "眠い", "寝る"],
+          "motions": ["vtaneG_005_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "bath_talk",
+          "label": "浴室闲聊",
+          "category": "日常",
+          "priority": 1,
+          "keywords": ["洗澡", "泡澡", "浴室", "浴缸", "お風呂", "風呂", "おふろ"],
+          "motions": ["tFRM_009_voice"],
+          "sound": "auto",
+          "hint": "穿衣状态下的浴室对话动作"
+        },
+        {
+          "id": "mood_happy",
+          "label": "开心",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["开心", "高兴", "太好了", "好棒", "喜欢", "爱你", "嬉しい", "楽しい", "うれしい", "好き", "よかった"],
+          "motions": ["OP_014_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_jk",
+          "label": "元气满满",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["元气", "活力", "可爱", "少女", "校服", "かわいい", "元気", "JK"],
+          "motions": ["OP_004b_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_shy",
+          "label": "害羞",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["害羞", "脸红", "不好意思", "羞", "紧张", "はずかしい", "照れ", "ドキドキ", "恥ずかしい"],
+          "motions": ["OP_021_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_angry",
+          "label": "生气/否认",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["生气", "骗人", "不是", "讨厌", "别闹", "不行", "怒", "むかつく", "いや", "だめ", "違う"],
+          "motions": ["OP_040a_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_surprise",
+          "label": "惊讶",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["诶", "咦", "什么", "不会吧", "惊讶", "真的吗", "えっ", "まさか", "びっくり", "うそ"],
+          "motions": ["OP_054_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_laugh",
+          "label": "笑",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["哈哈", "笑", "有趣", "好笑", "おもしろい", "笑った", "ふふ", "あはは"],
+          "motions": ["OP_042b_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "undress",
+          "label": "脱衣服",
+          "category": "换装",
+          "priority": 3,
+          "keywords": ["脱衣服", "脱衣", "脱掉", "脱了", "脱光", "全裸", "裸体", "裸", "脱いで", "脱ぐ", "はだか", "裸になって"],
+          "motions": ["tFRM_014_voice"],
+          "sound": "auto",
+          "params": { "Param": 30 },
+          "transitionMs": 1200,
+          "persistent": true,
+          "hint": "衣服平滑淡出（Param 0→30）；SFW 毛玻璃开启时画面被糊住",
+          "evidence": {
+            "kind": "param",
+            "param": "Param",
+            "from": 0,
+            "to": 30,
+            "screenshots": ["work/pet_dev/recon/state_tachie_Param_sheet.png", "work/pet_dev/recon/state_tachie_Param/Param_0.png", "work/pet_dev/recon/state_tachie_Param/Param_30.png"],
+            "motionStats": "work/pet_dev/recon/mtn_params.json（tFRM_008~016 全帧 Param=30，其余动作 Param=0）"
+          }
+        },
+        {
+          "id": "dress",
+          "label": "穿衣服",
+          "category": "换装",
+          "priority": 3,
+          "keywords": ["穿衣服", "穿衣", "穿上", "穿好", "穿回", "着衣", "着て", "着る", "服を着て"],
+          "motions": ["tFRM_001_voice"],
+          "sound": "auto",
+          "params": { "Param": 0 },
+          "transitionMs": 1200,
+          "persistent": true,
+          "hint": "衣服平滑淡入（Param 30→0）",
+          "evidence": {
+            "kind": "param",
+            "param": "Param",
+            "from": 30,
+            "to": 0,
+            "screenshots": ["work/pet_dev/recon/state_tachie_Param_sheet.png"]
+          }
+        },
+        {
+          "id": "half_undress",
+          "label": "半脱（实验性）",
+          "category": "实验性",
+          "priority": 1,
+          "keywords": ["半脱", "半裸", "脱一半", "衣冠不整", "半脱ぎ", "はんぬぎ"],
+          "motions": [],
+          "sound": "none",
+          "params": { "Param": 15 },
+          "transitionMs": 900,
+          "persistent": true,
+          "experimental": true,
+          "heuristic": true,
+          "heuristicNote": "启发式·非官方素材：用 Param=15 中间值插值出来的半脱效果，不是原模型自带的半脱贴图/动画；观感可能猎奇，默认不自动触发，只在面板「实验性」分类手动点击。",
+          "hint": "中间状态：衣服半透明（Param≈15，启发式插值，非官方素材）"
+        }
+      ]
+    },
+    "r01-tachie-ani": {
+      "displayName": "处女前辈 · R01_tachie_ani（里穂）",
+      "display": { "scale": 1.0 },
+      "capabilities": {
+        "undress": {
+          "supported": false,
+          "note": "贴图中没有裸体躯干素材，54 个参数逐一 min/max 扫描无服装切换，部件隔离也脱不掉；仅眼镜可穿脱（Param30）"
+        },
+        "dress": { "supported": false, "note": "同上，模型本身不支持服装切换" },
+        "accessory": {
+          "supported": true,
+          "kind": "param",
+          "param": "Param30",
+          "glassesOn": 0,
+          "glassesOff": 30,
+          "note": "glassON/glassOFF 动作对只有 Param30 一个参数差异（0=戴眼镜，30=摘眼镜）"
+        }
+      },
+      "resetParams": { "Param30": 0 },
+      "aiControl": {
+        "clothing": null,
+        "accessories": [
+          {
+            "id": "glass",
+            "label": "眼镜",
+            "onMotion": "OP_0001_glassON",
+            "offMotion": "OP_0001_glassOFF",
+            "onParams": { "Param30": 0 },
+            "offParams": { "Param30": 30 }
+          }
+        ],
+        "motionPrefixes": ["OP_", "Q_", "zED_"]
+      },
+      "scenes": [
+        {
+          "id": "daily_hello",
+          "label": "打招呼",
+          "category": "日常",
+          "priority": 1,
+          "keywords": ["你好", "您好", "早上好", "晚上好", "嗨", "哈喽", "hi", "hello", "こんにちは", "こんばんは", "おはよう", "ただいま", "我回来了"],
+          "motions": ["OP_0001_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "daily_study",
+          "label": "一起学习",
+          "category": "日常",
+          "priority": 1,
+          "keywords": ["学习", "上课", "作业", "复习", "考试", "勉強", "宿題", "授業", "テスト"],
+          "motions": ["OP_0003_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "daily_bath",
+          "label": "浴室",
+          "category": "日常",
+          "priority": 1,
+          "keywords": ["洗澡", "泡澡", "浴室", "浴缸", "お風呂", "風呂"],
+          "motions": ["OP_0001_voice"],
+          "sound": "auto",
+          "hint": "R01 无浴室专用动作，使用通用问候动作"
+        },
+        {
+          "id": "mood_happy",
+          "label": "开心",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["开心", "高兴", "太好了", "好棒", "喜欢", "爱你", "嬉しい", "楽しい", "うれしい", "好き", "よかった"],
+          "motions": ["OP_0006_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_shy",
+          "label": "害羞",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["害羞", "脸红", "不好意思", "羞", "紧张", "はずかしい", "照れ", "ドキドキ", "恥ずかしい"],
+          "motions": ["Q_0006_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_gentle",
+          "label": "温柔",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["温柔", "体贴", "安慰", "抱抱", "摸摸头", "優しい", "慰め", "なでなで"],
+          "motions": ["Q_0005_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_lonely",
+          "label": "寂寞",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["寂寞", "孤单", "一个人", "陪我", "别走", "寂しい", "一人", "そばにいて"],
+          "motions": ["zED_0028_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_surprise",
+          "label": "惊讶",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["诶", "咦", "什么", "不会吧", "惊讶", "真的吗", "えっ", "まさか", "びっくり", "うそ"],
+          "motions": ["zED_0029_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_flustered",
+          "label": "慌张",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["糟糕", "糟了", "怎么办", "慌", "やばい", "しまった", "どうしよう"],
+          "motions": ["Q_0030_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "mood_deny",
+          "label": "否认",
+          "category": "情绪",
+          "priority": 2,
+          "keywords": ["不是", "不对", "没有", "别误会", "違う", "ちがう", "いやいや"],
+          "motions": ["OP_0100c_voice"],
+          "sound": "auto"
+        },
+        {
+          "id": "glasses_on",
+          "label": "戴眼镜",
+          "category": "换装",
+          "priority": 3,
+          "keywords": ["戴眼镜", "戴上眼镜", "眼镜", "メガネ", "眼鏡", "めがね", "眼镜戴上"],
+          "motions": ["OP_0001_glassON"],
+          "sound": "auto",
+          "params": { "Param30": 0 },
+          "transitionMs": 600,
+          "persistent": true,
+          "hint": "Param30=0 戴眼镜（模型默认戴眼镜）",
+          "evidence": {
+            "kind": "param",
+            "param": "Param30",
+            "from": 30,
+            "to": 0,
+            "screenshots": ["work/pet_dev/recon/motion_glass2_sheet.png", "work/pet_dev/recon/state_r01_glasses_sheet.png"]
+          }
+        },
+        {
+          "id": "glasses_off",
+          "label": "摘眼镜",
+          "category": "换装",
+          "priority": 3,
+          "keywords": ["摘眼镜", "取下眼镜", "不戴眼镜", "脱眼镜", "メガネを外して", "眼鏡を外", "めがねをはず"],
+          "motions": ["OP_0001_glassOFF"],
+          "sound": "auto",
+          "params": { "Param30": 30 },
+          "transitionMs": 600,
+          "persistent": true,
+          "hint": "Param30=30 摘眼镜",
+          "evidence": {
+            "kind": "param",
+            "param": "Param30",
+            "from": 0,
+            "to": 30,
+            "screenshots": ["work/pet_dev/recon/motion_glass2_sheet.png", "work/pet_dev/recon/state_r01_glasses_sheet.png"],
+            "motionStats": "work/pet_dev/recon/mtn_params.json（glassON/glassOFF 动作对仅 Param30 不同）"
+          }
+        }
+      ]
+    },
+    "__fallback__": {
+      "displayName": "通用（未配置场景的模型）",
+      "display": { "scale": null },
+      "capabilities": {},
+      "resetParams": {},
+      "scenes": []
+    }
+  }
+}

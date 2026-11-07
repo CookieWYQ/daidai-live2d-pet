@@ -1,0 +1,61 @@
+/* 63 模型库管理页：文件夹 → 游戏 → 模型 分组、搜索、重新扫描 */
+.model-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 10px 0 8px;
+}
+.model-toolbar input[type="search"] {
+  flex: 1 1 220px;
+  min-width: 160px;
+}
+.model-toolbar select {
+  flex: 0 0 auto;
+}
+.model-scan-status {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+.model-group {
+  margin-bottom: 14px;
+}
+.model-group-title {
+  margin: 14px 0 6px;
+  font-size: 15px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+  padding-bottom: 4px;
+}
+.model-game {
+  margin: 6px 0 10px 8px;
+}
+.model-game-title {
+  margin: 8px 0 4px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+.model-row.selected {
+  outline: 1px solid rgba(90, 160, 255, 0.8);
+  border-radius: 6px;
+}
+.model-row .model-info {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.model-row .model-path {
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 72ch;
+}
+.pill.kind-c2 {
+  background: rgba(120, 220, 160, 0.18);
+  color: #7ee2a8;
+}
+.pill.kind-c3 {
+  background: rgba(130, 170, 255, 0.18);
+  color: #9db8ff;
+}

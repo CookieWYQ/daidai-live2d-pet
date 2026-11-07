@@ -1,0 +1,79 @@
+{
+  "name": "daidai-live2d-pet",
+  "version": "0.2.0",
+  "private": false,
+  "description": "Open-source Electron Live2D desktop pet: fine-grained scaling, configurable global hotkeys, text chat history, AI session adapters and scene/motion system.",
+  "type": "commonjs",
+  "main": "src/main/main.js",
+  "bin": {
+    "daidai-live2d-pet": "bin/daidai-live2d-pet.js"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "test": "node --test",
+    "doctor": "node scripts/doctor.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win portable"
+  },
+  "keywords": [
+    "live2d",
+    "electron",
+    "desktop-pet",
+    "global-hotkeys",
+    "chat-history",
+    "codex",
+    "claude-code"
+  ],
+  "author": "Daidai contributors",
+  "license": "MIT",
+  "dependencies": {
+    "@hazart-pkg/live2d-core": "^1.0.1",
+    "pixi-live2d-display": "^0.4.0",
+    "pixi.js": "^6.5.10"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.0.0",
+    "electron": "^42.3.2",
+    "electron-builder": "^26.8.1"
+  },
+  "overrides": {
+    "gh-pages": "^6.3.0"
+  },
+  "build": {
+    "appId": "com.daidai.live2d-pet",
+    "productName": "Daidai Live2D Pet",
+    "copyright": "MIT",
+    "directories": {
+      "output": "dist"
+    },
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "src/renderer/assets/app-icon.png"
+    },
+    "portable": {
+      "artifactName": "Daidai-Live2D-Pet-${version}.exe"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CookieWYQ/daidai-live2d-pet.git"
+  },
+  "homepage": "https://github.com/CookieWYQ/daidai-live2d-pet#readme",
+  "bugs": {
+    "url": "https://github.com/CookieWYQ/daidai-live2d-pet/issues"
+  }
+}

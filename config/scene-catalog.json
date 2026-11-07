@@ -1,0 +1,3066 @@
+{
+ "version": 1,
+ "generatedAt": "2026-11-07T01:55:08.863Z",
+ "description": "场景目录：一个模型 = 一个可切换场景，含给 AI 的描述/调用时机/NSFW 限制/证据",
+ "models": {
+  "tachie-ani": {
+   "modelId": "tachie-ani",
+   "modelDirName": "tachie_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "kind": "character",
+   "sceneLabel": "立绘 · 日常对话",
+   "category": "日常",
+   "description": "初冬暖阳R 女主角的日常立绘（Cubism2；320 个动作 / 155 段原声；Param 0~30 可换装）。游戏 scenario 用 [live2d_new name=\"tachie_ani\"] 作为对话立绘。",
+   "whenToUse": "日常闲聊、问候、情绪回应、换装时优先使用；是该游戏的默认角色模型。",
+   "nsfwOnly": false,
+   "keywords": [
+    "立绘",
+    "日常",
+    "对话",
+    "换装",
+    "tachie",
+    "女主"
+   ],
+   "defaultScene": "daily_hello",
+   "representativeMotions": [],
+   "soundExamples": [
+    "OP001こんばんわ♪おにーさん、連絡くれた人…だよね？.ogg",
+    "OP002うん、私がこはるだよー。桜森こはる。よろしくね♪.ogg",
+    "OP003こはると会ってくれてありがとー♪おにーさん、優しそうな人でよかったぁ。.ogg",
+    "OP004aえへへ。ありがとう。学校帰りでそのままきちゃったんだ。.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source.apk",
+     "detail": "初冬暖阳R(巴比伦汉化组)_1.0.apk"
+    },
+    {
+     "source": "scenario:_preview.ks:8",
+     "detail": "[live2d_new name=\"tachie_ani\"] 对话立绘指令"
+    },
+    {
+     "source": "links.json",
+     "detail": "155 条动作↔原声（如 OP_001_voice ↔ audio/OP001…ogg）"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 初冬暖阳R(巴比伦汉化组) / 初冬暖阳R 女主"
+  },
+  "r01-tachie-ani": {
+   "modelId": "r01-tachie-ani",
+   "modelDirName": "R01_tachie_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "kind": "character",
+   "sceneLabel": "立绘 · 日常对话",
+   "category": "日常",
+   "description": "处女前辈女主角的日常立绘（Cubism2；305 个动作 / 148 段原声；Param30 控制眼镜戴/摘）。scenario 用 [live2d_new name=\"R01_tachie_ani\"] 作为对话立绘。",
+   "whenToUse": "日常闲聊、一起学习/浴室等日常场景、情绪回应、眼镜穿脱时优先使用；是该游戏的默认角色模型。",
+   "nsfwOnly": false,
+   "keywords": [
+    "立绘",
+    "日常",
+    "对话",
+    "眼镜",
+    "r01",
+    "学姐",
+    "女主"
+   ],
+   "defaultScene": "daily_hello",
+   "representativeMotions": [],
+   "soundExamples": [
+    "OP_0001（う～っ…初めての待ち合わせ、緊張するぅ…）.ogg",
+    "OP_0002（彼氏を待つのって、こんなにドキドキするんだぁ。）.ogg",
+    "OP_0003（今日は二人で勉強会。私が後輩くんの苦手な教科を、家で教えてあげるんだよね…）.ogg",
+    "OP_0004（うん…勉強会。勉強会っていう名目だけど）.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:R01_opening.ks:35",
+     "detail": "*待ち合わせ … [live2d_new name=\"R01_tachie_ani\"]"
+    },
+    {
+     "source": "scenario:R02_kaiwa_ending.ks:7",
+     "detail": "*後背位前会話 仍使用 R01_tachie_ani 立绘"
+    },
+    {
+     "source": "links.json",
+     "detail": "148 条动作↔原声"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 处女前辈想要做爱!～闷骚女友的幸福初体验～ / 处女前辈 女主"
+  },
+  "lib-ffhouse-1avyyun": {
+   "modelId": "lib-ffhouse-1avyyun",
+   "modelDirName": "Midori",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "お姉ちゃんには内緒ですよ",
+   "character": "お姉ちゃんには内緒ですよ",
+   "kind": "character",
+   "sceneLabel": "Midori · 立绘",
+   "category": "日常",
+   "description": "来自游戏《お姉ちゃんには内緒ですよ》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 1 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "Midori",
+    "お姉ちゃんには内緒ですよ",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "MoveVoice.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk お姉ちゃんには内緒ですよ.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 6"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / お姉ちゃんには内緒ですよ / お姉ちゃんには内緒ですよ"
+  },
+  "lib-ffhouse-z7yabk": {
+   "modelId": "lib-ffhouse-z7yabk",
+   "modelDirName": "a1",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "かよちゃんとの特別補導",
+   "character": "かよちゃんとの特別補導",
+   "kind": "character",
+   "sceneLabel": "a1 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《かよちゃんとの特別補導》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 5 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "a1",
+    "かよちゃんとの特別補導",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "moveSE.wav",
+    "moveSE.wav",
+    "cumM4.wav",
+    "INSE3.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk かよちゃんとの特別補導.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 9"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / かよちゃんとの特別補導 / かよちゃんとの特別補導"
+  },
+  "lib-ffhouse-101x3eh": {
+   "modelId": "lib-ffhouse-101x3eh",
+   "modelDirName": "a2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "かよちゃんとの特別補導",
+   "character": "かよちゃんとの特別補導",
+   "kind": "character",
+   "sceneLabel": "a2 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《かよちゃんとの特別補導》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 5 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "a2",
+    "かよちゃんとの特別補導",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "moveSE.wav",
+    "moveSE.wav",
+    "cumM4.wav",
+    "INSE3.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk かよちゃんとの特別補導.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 9"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / かよちゃんとの特別補導 / かよちゃんとの特別補導"
+  },
+  "lib-ffhouse-zrxhpi": {
+   "modelId": "lib-ffhouse-zrxhpi",
+   "modelDirName": "a3",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "かよちゃんとの特別補導",
+   "character": "かよちゃんとの特別補導",
+   "kind": "character",
+   "sceneLabel": "a3 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《かよちゃんとの特別補導》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 7 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "a3",
+    "かよちゃんとの特別補導",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "moveSE.wav",
+    "moveSE.wav",
+    "cumM4.wav",
+    "INSE3.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk かよちゃんとの特別補導.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 11"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / かよちゃんとの特別補導 / かよちゃんとの特別補導"
+  },
+  "lib-ffhouse-1b5zryg": {
+   "modelId": "lib-ffhouse-1b5zryg",
+   "modelDirName": "main1",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "オナホ妖精ちゃん",
+   "character": "オナホ妖精ちゃん",
+   "kind": "character",
+   "sceneLabel": "main1 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《オナホ妖精ちゃん》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 5 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "main1",
+    "オナホ妖精ちゃん",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "moveSE.wav",
+    "moveSE.wav",
+    "Cum.wav",
+    "inAfter.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk オナホ妖精ちゃん.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 9"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / オナホ妖精ちゃん / オナホ妖精ちゃん"
+  },
+  "lib-ffhouse-m1cxhc": {
+   "modelId": "lib-ffhouse-m1cxhc",
+   "modelDirName": "Koharu0",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "コハルとの放課後個別指導",
+   "character": "コハルとの放課後個別指導",
+   "kind": "character",
+   "sceneLabel": "Koharu0 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《コハルとの放課後個別指導》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 5 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "Koharu0",
+    "コハルとの放課後個別指導",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Cum.wav",
+    "In.wav",
+    "Out.wav",
+    "Hit1.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk コハルとの放課後個別指導.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 12"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / コハルとの放課後個別指導 / コハルとの放課後個別指導"
+  },
+  "lib-ffhouse-1lzip3y": {
+   "modelId": "lib-ffhouse-1lzip3y",
+   "modelDirName": "koharu2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "コハルとの放課後個別指導2",
+   "character": "コハルとの放課後個別指導2",
+   "kind": "character",
+   "sceneLabel": "koharu2 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《コハルとの放課後個別指導2》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 5 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "koharu2",
+    "コハルとの放課後個別指導2",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "moveSE.wav",
+    "moveSE.wav",
+    "cum.wav",
+    "in.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk コハルとの放課後個別指導2.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 9"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / コハルとの放課後個別指導2 / コハルとの放課後個別指導2"
+  },
+  "lib-ffhouse-t8dx84": {
+   "modelId": "lib-ffhouse-t8dx84",
+   "modelDirName": "CG1",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "リルカの魔術ショーにようこそ!",
+   "character": "リルカの魔術ショーにようこそ!",
+   "kind": "character",
+   "sceneLabel": "CG1 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《リルカの魔術ショーにようこそ!》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG1",
+    "リルカの魔術ショーにようこそ!",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Fuck.wav",
+    "move_5.wav",
+    "move_5.wav",
+    "cum_m_5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk base(6).apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 10"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / リルカの魔術ショーにようこそ! / リルカの魔術ショーにようこそ!"
+  },
+  "lib-ffhouse-u2cqb1": {
+   "modelId": "lib-ffhouse-u2cqb1",
+   "modelDirName": "CG2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "リルカの魔術ショーにようこそ!",
+   "character": "リルカの魔術ショーにようこそ!",
+   "kind": "character",
+   "sceneLabel": "CG2 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《リルカの魔術ショーにようこそ!》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 8 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG2",
+    "リルカの魔術ショーにようこそ!",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Fuck.wav",
+    "move_5.wav",
+    "move_5.wav",
+    "cum_m_5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk base(6).apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 12"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / リルカの魔術ショーにようこそ! / リルカの魔術ショーにようこそ!"
+  },
+  "lib-ffhouse-tsd4m2": {
+   "modelId": "lib-ffhouse-tsd4m2",
+   "modelDirName": "CG3",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "リルカの魔術ショーにようこそ!",
+   "character": "リルカの魔術ショーにようこそ!",
+   "kind": "character",
+   "sceneLabel": "CG3 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《リルカの魔術ショーにようこそ!》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 8 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG3",
+    "リルカの魔術ショーにようこそ!",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Fuck.wav",
+    "move_5.wav",
+    "move_5.wav",
+    "cum_m_5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk base(6).apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 12"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / リルカの魔術ショーにようこそ! / リルカの魔術ショーにようこそ!"
+  },
+  "lib-ffhouse-sef457": {
+   "modelId": "lib-ffhouse-sef457",
+   "modelDirName": "CG4",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "リルカの魔術ショーにようこそ!",
+   "character": "リルカの魔術ショーにようこそ!",
+   "kind": "character",
+   "sceneLabel": "CG4 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《リルカの魔術ショーにようこそ!》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 10 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG4",
+    "リルカの魔術ショーにようこそ!",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Fuck.wav",
+    "move_5.wav",
+    "move_5.wav",
+    "cum_m_5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk base(6).apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 14"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / リルカの魔術ショーにようこそ! / リルカの魔術ショーにようこそ!"
+  },
+  "lib-ffhouse-syebj5": {
+   "modelId": "lib-ffhouse-syebj5",
+   "modelDirName": "CG6",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "リルカの魔術ショーにようこそ!",
+   "character": "リルカの魔術ショーにようこそ!",
+   "kind": "character",
+   "sceneLabel": "CG6 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《リルカの魔術ショーにようこそ!》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG6",
+    "リルカの魔術ショーにようこそ!",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Fuck.wav",
+    "move_5.wav",
+    "move_5.wav",
+    "cum_m_5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk base(6).apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 10"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / リルカの魔術ショーにようこそ! / リルカの魔術ショーにようこそ!"
+  },
+  "lib-ffhouse-gt9aej": {
+   "modelId": "lib-ffhouse-gt9aej",
+   "modelDirName": "CGstand",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "リルカの魔術ショーにようこそ!",
+   "character": "リルカの魔術ショーにようこそ!",
+   "kind": "character",
+   "sceneLabel": "CGstand · 立绘",
+   "category": "日常",
+   "description": "来自游戏《リルカの魔術ショーにようこそ!》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 8 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CGstand",
+    "リルカの魔術ショーにようこそ!",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Fuck.wav",
+    "move_5.wav",
+    "move_5.wav",
+    "cum_m_5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk base(6).apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 12"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / リルカの魔術ショーにようこそ! / リルカの魔術ショーにようこそ!"
+  },
+  "lib-ffhouse-bik0qa": {
+   "modelId": "lib-ffhouse-bik0qa",
+   "modelDirName": "main",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "性処理専用ペット ねずみちゃん",
+   "character": "性処理専用ペット ねずみちゃん",
+   "kind": "character",
+   "sceneLabel": "main · 立绘",
+   "category": "日常",
+   "description": "来自游戏《性処理専用ペット ねずみちゃん》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 9 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "main",
+    "性処理専用ペット ねずみちゃん",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath1.wav",
+    "breath2.wav",
+    "fuck.wav",
+    "moveSE.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 性処理専用ペット ねずみちゃん.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 11"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 性処理専用ペット ねずみちゃん / 性処理専用ペット ねずみちゃん"
+  },
+  "lib-ffhouse-xi54tt": {
+   "modelId": "lib-ffhouse-xi54tt",
+   "modelDirName": "a1",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "猫メイド、集合！",
+   "character": "猫メイド、集合！",
+   "kind": "character",
+   "sceneLabel": "a1 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《猫メイド、集合！》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "a1",
+    "猫メイド、集合！",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move2.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 猫メイド、集合！.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 7"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 猫メイド、集合！ / 猫メイド、集合！"
+  },
+  "lib-ffhouse-wo6bqw": {
+   "modelId": "lib-ffhouse-wo6bqw",
+   "modelDirName": "a2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "猫メイド、集合！",
+   "character": "猫メイド、集合！",
+   "kind": "character",
+   "sceneLabel": "a2 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《猫メイド、集合！》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "a2",
+    "猫メイド、集合！",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move2.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 猫メイド、集合！.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 7"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 猫メイド、集合！ / 猫メイド、集合！"
+  },
+  "lib-ffhouse-wy5xfv": {
+   "modelId": "lib-ffhouse-wy5xfv",
+   "modelDirName": "a3",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "猫メイド、集合！",
+   "character": "猫メイド、集合！",
+   "kind": "character",
+   "sceneLabel": "a3 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《猫メイド、集合！》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "a3",
+    "猫メイド、集合！",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move2.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 猫メイド、集合！.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 7"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 猫メイド、集合！ / 猫メイド、集合！"
+  },
+  "lib-ffhouse-yc3xwq": {
+   "modelId": "lib-ffhouse-yc3xwq",
+   "modelDirName": "a4",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "猫メイド、集合！",
+   "character": "猫メイド、集合！",
+   "kind": "character",
+   "sceneLabel": "a4 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《猫メイド、集合！》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "a4",
+    "猫メイド、集合！",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move2.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 猫メイド、集合！.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 7"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 猫メイド、集合！ / 猫メイド、集合！"
+  },
+  "lib-ffhouse-ywyqhz": {
+   "modelId": "lib-ffhouse-ywyqhz",
+   "modelDirName": "CG1",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "character": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "kind": "character",
+   "sceneLabel": "CG1 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《甘えんぼな妹と二人きりいちゃラブ性活》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 11 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG1",
+    "甘えんぼな妹と二人きりいちゃラブ性活",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath1.wav",
+    "breath2.wav",
+    "Fuck.wav",
+    "Fuck.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 甘えんぼな妹と二人きりいちゃラブ性活ver1.0c.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 13"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 甘えんぼな妹と二人きりいちゃラブ性活 / 甘えんぼな妹と二人きりいちゃラブ性活"
+  },
+  "lib-ffhouse-z6yc6y": {
+   "modelId": "lib-ffhouse-z6yc6y",
+   "modelDirName": "CG2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "character": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "kind": "character",
+   "sceneLabel": "CG2 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《甘えんぼな妹と二人きりいちゃラブ性活》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG2",
+    "甘えんぼな妹と二人きりいちゃラブ性活",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath1.wav",
+    "breath2.wav",
+    "Fuck.wav",
+    "move_mouth5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 甘えんぼな妹と二人きりいちゃラブ性活ver1.0c.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 8"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 甘えんぼな妹と二人きりいちゃラブ性活 / 甘えんぼな妹と二人きりいちゃラブ性活"
+  },
+  "lib-ffhouse-zgxxvx": {
+   "modelId": "lib-ffhouse-zgxxvx",
+   "modelDirName": "CG3",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "character": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "kind": "character",
+   "sceneLabel": "CG3 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《甘えんぼな妹と二人きりいちゃラブ性活》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG3",
+    "甘えんぼな妹と二人きりいちゃラブ性活",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath1.wav",
+    "breath2.wav",
+    "Fuck.wav",
+    "move_mouth5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 甘えんぼな妹と二人きりいちゃラブ性活ver1.0c.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 8"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 甘えんぼな妹と二人きりいちゃラブ性活 / 甘えんぼな妹と二人きりいちゃラブ性活"
+  },
+  "lib-ffhouse-xj0q14": {
+   "modelId": "lib-ffhouse-xj0q14",
+   "modelDirName": "CG4",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "character": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "kind": "character",
+   "sceneLabel": "CG4 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《甘えんぼな妹と二人きりいちゃラブ性活》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 11 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG4",
+    "甘えんぼな妹と二人きりいちゃラブ性活",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath1.wav",
+    "breath2.wav",
+    "Fuck.wav",
+    "Fuck.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 甘えんぼな妹と二人きりいちゃラブ性活ver1.0c.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 13"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 甘えんぼな妹と二人きりいちゃラブ性活 / 甘えんぼな妹と二人きりいちゃラブ性活"
+  },
+  "lib-ffhouse-xt0bq3": {
+   "modelId": "lib-ffhouse-xt0bq3",
+   "modelDirName": "CG5",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "character": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "kind": "character",
+   "sceneLabel": "CG5 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《甘えんぼな妹と二人きりいちゃラブ性活》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 8 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG5",
+    "甘えんぼな妹と二人きりいちゃラブ性活",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath1.wav",
+    "breath2.wav",
+    "Fuck.wav",
+    "move_mouth5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 甘えんぼな妹と二人きりいちゃラブ性活ver1.0c.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 10"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 甘えんぼな妹と二人きりいちゃラブ性活 / 甘えんぼな妹と二人きりいちゃラブ性活"
+  },
+  "lib-ffhouse-y2zxf2": {
+   "modelId": "lib-ffhouse-y2zxf2",
+   "modelDirName": "CG6",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "character": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "kind": "character",
+   "sceneLabel": "CG6 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《甘えんぼな妹と二人きりいちゃラブ性活》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "CG6",
+    "甘えんぼな妹と二人きりいちゃラブ性活",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath1.wav",
+    "breath2.wav",
+    "Fuck.wav",
+    "move_mouth5.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 甘えんぼな妹と二人きりいちゃラブ性活ver1.0c.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 8"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 甘えんぼな妹と二人きりいちゃラブ性活 / 甘えんぼな妹と二人きりいちゃラブ性活"
+  },
+  "lib-ffhouse-19cv6py": {
+   "modelId": "lib-ffhouse-19cv6py",
+   "modelDirName": "stand",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "character": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "kind": "character",
+   "sceneLabel": "stand · 立绘",
+   "category": "日常",
+   "description": "来自游戏《甘えんぼな妹と二人きりいちゃラブ性活》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 4 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "stand",
+    "甘えんぼな妹と二人きりいちゃラブ性活",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath1.wav",
+    "breath2.wav",
+    "move_mouth8.wav",
+    "Cum_In_MouthSE.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 甘えんぼな妹と二人きりいちゃラブ性活ver1.0c.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 6"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 甘えんぼな妹と二人きりいちゃラブ性活 / 甘えんぼな妹と二人きりいちゃラブ性活"
+  },
+  "lib-ffhouse-5idupb": {
+   "modelId": "lib-ffhouse-5idupb",
+   "modelDirName": "main",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド vol.1",
+   "character": "私の猫メイド vol.1",
+   "kind": "character",
+   "sceneLabel": "main · 立绘",
+   "category": "日常",
+   "description": "来自游戏《私の猫メイド vol.1》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "main",
+    "私の猫メイド vol.1",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 私の猫メイド vol.1.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 12"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 私の猫メイド vol.1 / 私の猫メイド vol.1"
+  },
+  "lib-ffhouse-2wvcrv": {
+   "modelId": "lib-ffhouse-2wvcrv",
+   "modelDirName": "EBowjob",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド vol.1.5",
+   "character": "私の猫メイド vol.1.5",
+   "kind": "character",
+   "sceneLabel": "EBowjob · 立绘",
+   "category": "日常",
+   "description": "来自游戏《私の猫メイド vol.1.5》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 2 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "EBowjob",
+    "私の猫メイド vol.1.5",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Move.wav",
+    "Move.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 私の猫メイド vol.1.5.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 8"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 私の猫メイド vol.1.5 / 私の猫メイド vol.1.5"
+  },
+  "lib-ffhouse-o33h9h": {
+   "modelId": "lib-ffhouse-o33h9h",
+   "modelDirName": "sence2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド Vol.2",
+   "character": "私の猫メイド Vol.2",
+   "kind": "character",
+   "sceneLabel": "sence2 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《私の猫メイド Vol.2》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "sence2",
+    "私の猫メイド Vol.2",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move2.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 私の猫メイド Vol.2.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 7"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 私の猫メイド Vol.2 / 私の猫メイド Vol.2"
+  },
+  "lib-ffhouse-nt3vki": {
+   "modelId": "lib-ffhouse-nt3vki",
+   "modelDirName": "sence3",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド Vol.2",
+   "character": "私の猫メイド Vol.2",
+   "kind": "character",
+   "sceneLabel": "sence3 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《私の猫メイド Vol.2》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "sence3",
+    "私の猫メイド Vol.2",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move2.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 私の猫メイド Vol.2.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 7"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 私の猫メイド Vol.2 / 私の猫メイド Vol.2"
+  },
+  "lib-ffhouse-mf5v3n": {
+   "modelId": "lib-ffhouse-mf5v3n",
+   "modelDirName": "sence4",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド Vol.2",
+   "character": "私の猫メイド Vol.2",
+   "kind": "character",
+   "sceneLabel": "sence4 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《私の猫メイド Vol.2》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "sence4",
+    "私の猫メイド Vol.2",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move2.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 私の猫メイド Vol.2.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 7"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 私の猫メイド Vol.2 / 私の猫メイド Vol.2"
+  },
+  "lib-ffhouse-14qw8q2": {
+   "modelId": "lib-ffhouse-14qw8q2",
+   "modelDirName": "sence6SP",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド Vol.2",
+   "character": "私の猫メイド Vol.2",
+   "kind": "character",
+   "sceneLabel": "sence6SP · 立绘",
+   "category": "日常",
+   "description": "来自游戏《私の猫メイド Vol.2》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 6 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "sence6SP",
+    "私の猫メイド Vol.2",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move2.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 私の猫メイド Vol.2.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 7"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 私の猫メイド Vol.2 / 私の猫メイド Vol.2"
+  },
+  "lib-ffhouse-1ox2myl": {
+   "modelId": "lib-ffhouse-1ox2myl",
+   "modelDirName": "L5a1",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド Vol.3",
+   "character": "私の猫メイド Vol.3",
+   "kind": "character",
+   "sceneLabel": "L5a1 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《私の猫メイド Vol.3》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 8 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "L5a1",
+    "私の猫メイド Vol.3",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move1.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 私の猫メイド Vol.3.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 9"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 私の猫メイド Vol.3 / 私の猫メイド Vol.3"
+  },
+  "lib-ffhouse-1o33tvo": {
+   "modelId": "lib-ffhouse-1o33tvo",
+   "modelDirName": "L5a2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド Vol.3",
+   "character": "私の猫メイド Vol.3",
+   "kind": "character",
+   "sceneLabel": "L5a2 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《私の猫メイド Vol.3》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 8 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "L5a2",
+    "私の猫メイド Vol.3",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move1.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 私の猫メイド Vol.3.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 9"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 私の猫メイド Vol.3 / 私の猫メイド Vol.3"
+  },
+  "lib-ffhouse-1od3fkn": {
+   "modelId": "lib-ffhouse-1od3fkn",
+   "modelDirName": "L5a3",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド Vol.3",
+   "character": "私の猫メイド Vol.3",
+   "kind": "character",
+   "sceneLabel": "L5a3 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《私の猫メイド Vol.3》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 8 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "L5a3",
+    "私の猫メイド Vol.3",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath.wav",
+    "breath.wav",
+    "breath.wav",
+    "move1.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 私の猫メイド Vol.3.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 9"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 私の猫メイド Vol.3 / 私の猫メイド Vol.3"
+  },
+  "lib-ffhouse-1wlg13f": {
+   "modelId": "lib-ffhouse-1wlg13f",
+   "modelDirName": "Hina2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "風紀委員長の裏仕事",
+   "character": "風紀委員長の裏仕事",
+   "kind": "character",
+   "sceneLabel": "Hina2 · 立绘",
+   "category": "日常",
+   "description": "来自游戏《風紀委員長の裏仕事》的 Cubism3 角色立绘（Unity 提取，含待机/呼吸/动作组与 4 段原声）。",
+   "whenToUse": "日常闲聊、需要该角色出场时使用；作为该游戏的角色立绘之一，可由用户或 AI 明确选择切换。",
+   "nsfwOnly": false,
+   "keywords": [
+    "Hina2",
+    "風紀委員長の裏仕事",
+    "立绘"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "breath2.wav",
+    "move1.wav",
+    "cum.wav",
+    "breath2.wav"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "model_info.source",
+     "detail": "apk 風紀委員長の裏仕事.apk"
+    },
+    {
+     "source": "model_info.motion_note",
+     "detail": "原游戏无 motion3.json，动作由提取流程按 Unity Animator 状态名生成；动作数 6"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹1 · FFhouse / 風紀委員長の裏仕事 / 風紀委員長の裏仕事"
+  },
+  "lib-tyrano-120nbqr": {
+   "modelId": "lib-tyrano-120nbqr",
+   "modelDirName": "k03_tekoki_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "kind": "character",
+   "sceneLabel": "手交场景（手コキ）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：手交（手コキ）特写动画，Cubism2，23 个动作带原声（model.json motions[].sound）。（注意：该模型素材为全屏 CG，背景与人物在同一张贴图中，无法无损去除背景）",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求手交/手コキ场景，或亲密剧情推进到该行为时切换；默认桌宠不使用。",
+   "nsfwOnly": true,
+   "keywords": [
+    "手交",
+    "手コキ",
+    "tekoki",
+    "手活"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "T001.ogg",
+    "TSILENT.ogg",
+    "T003.ogg",
+    "TSILENT.ogg"
+   ],
+   "display": {
+    "scale": 0.8
+   },
+   "evidence": [
+    {
+     "source": "模型目录名",
+     "detail": "k03_tekoki_ani（tekoki = 手コキ 手交）"
+    },
+    {
+     "source": "model_info.notes",
+     "detail": "Cubism2 模型；model.json motions[].sound 引用的 SE/*.ogg 已保留"
+    },
+    {
+     "source": "证据不足说明",
+     "detail": "该游戏的 scenario 未保留 k03 对应脚本，用途依据模型名与动作/原声；标 medium"
+    }
+   ],
+   "confidence": "medium",
+   "opaqueFullFrame": true,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 初冬暖阳R(巴比伦汉化组) / 初冬暖阳R 女主"
+  },
+  "lib-tyrano-13cmx1o": {
+   "modelId": "lib-tyrano-13cmx1o",
+   "modelDirName": "k04_kijoui_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "kind": "character",
+   "sceneLabel": "骑乘位场景（騎乗位）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：骑乘位（騎乗位）动画，Cubism2，22 个动作带原声。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求骑乘位/騎乗位场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "骑乘位",
+    "騎乗位",
+    "kijoui"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "K001.ogg",
+    "KSILENT.ogg",
+    "K003456.ogg",
+    "K007sumata_LOOP.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "模型目录名",
+     "detail": "k04_kijoui_ani（kijoui = 騎乗位 骑乘位）"
+    },
+    {
+     "source": "model_info.notes",
+     "detail": "model.json motions[].sound 引用的 SE/*.ogg 已保留"
+    }
+   ],
+   "confidence": "medium",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 初冬暖阳R(巴比伦汉化组) / 初冬暖阳R 女主"
+  },
+  "lib-tyrano-6batbg": {
+   "modelId": "lib-tyrano-6batbg",
+   "modelDirName": "k05_seijoui_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "kind": "character",
+   "sceneLabel": "正常位场景（正常位）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：正常位动画，Cubism2，16 个动作带原声。（注意：该模型素材为全屏 CG，背景与人物在同一张贴图中，无法无损去除背景）",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求正常位场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "正常位",
+    "seijoui"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "S001.ogg",
+    "SSILENT.ogg",
+    "S003.ogg",
+    "S004slowLOOP.ogg"
+   ],
+   "display": {
+    "scale": 0.8
+   },
+   "evidence": [
+    {
+     "source": "模型目录名",
+     "detail": "k05_seijoui_ani（seijoui = 正常位）"
+    },
+    {
+     "source": "model_info.notes",
+     "detail": "model.json motions[].sound 原声保留"
+    }
+   ],
+   "confidence": "medium",
+   "opaqueFullFrame": true,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 初冬暖阳R(巴比伦汉化组) / 初冬暖阳R 女主"
+  },
+  "lib-tyrano-ds9bol": {
+   "modelId": "lib-tyrano-ds9bol",
+   "modelDirName": "k06_paizuri_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "kind": "character",
+   "sceneLabel": "乳交场景（パイズリ）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：乳交（パイズリ）动画，Cubism2，15 个动作带原声。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求乳交/パイズリ场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "乳交",
+    "パイズリ",
+    "paizuri"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "P001.ogg",
+    "PSILENT.ogg",
+    "P003A.ogg",
+    "P003B.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "模型目录名",
+     "detail": "k06_paizuri_ani（paizuri = パイズリ 乳交）"
+    },
+    {
+     "source": "model_info.notes",
+     "detail": "model.json motions[].sound 原声保留"
+    }
+   ],
+   "confidence": "medium",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 初冬暖阳R(巴比伦汉化组) / 初冬暖阳R 女主"
+  },
+  "lib-tyrano-1xjrmxz": {
+   "modelId": "lib-tyrano-1xjrmxz",
+   "modelDirName": "k07_kouhai_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "kind": "character",
+   "sceneLabel": "后背位场景（後背位）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：后背位动画，Cubism2，18 个动作带原声。（注意：该模型素材为全屏 CG，背景与人物在同一张贴图中，无法无损去除背景）",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求后位/後背位场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "后位",
+    "后背位",
+    "後背位",
+    "kouhai"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "B001.ogg",
+    "BeSILENT.ogg",
+    "B001_3.ogg",
+    "BeSILENT.ogg"
+   ],
+   "display": {
+    "scale": 0.8
+   },
+   "evidence": [
+    {
+     "source": "模型目录名",
+     "detail": "k07_kouhai_ani（kouhai = 後背位 后背位）"
+    },
+    {
+     "source": "model_info.notes",
+     "detail": "model.json motions[].sound 原声保留"
+    }
+   ],
+   "confidence": "medium",
+   "opaqueFullFrame": true,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 初冬暖阳R(巴比伦汉化组) / 初冬暖阳R 女主"
+  },
+  "lib-tyrano-ep9jwz": {
+   "modelId": "lib-tyrano-ep9jwz",
+   "modelDirName": "k08_taimen_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "kind": "character",
+   "sceneLabel": "对面位场景（対面）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：对面位（対面）动画，Cubism2，19 个动作带原声。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求对面位/対面场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "对面位",
+    "対面",
+    "taimen"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Z001_01.ogg",
+    "ZSILENT.ogg",
+    "Z001_02.ogg",
+    "Z002.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "模型目录名",
+     "detail": "k08_taimen_ani（taimen = 対面 对面位）"
+    },
+    {
+     "source": "model_info.notes",
+     "detail": "model.json motions[].sound 原声保留"
+    }
+   ],
+   "confidence": "medium",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 初冬暖阳R(巴比伦汉化组) / 初冬暖阳R 女主"
+  },
+  "lib-tyrano-1190u8a": {
+   "modelId": "lib-tyrano-1190u8a",
+   "modelDirName": "k09_tane_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "kind": "character",
+   "sceneLabel": "种付·中出场景（種付け）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：種付け（中出/播种）动画，Cubism2，14 个动作带原声。（注意：该模型素材为全屏 CG，背景与人物在同一张贴图中，无法无损去除背景）",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求中出/種付け场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "种付",
+    "種付け",
+    "中出",
+    "tane"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "TA001.ogg",
+    "TASILENT.ogg",
+    "TA003sounyu.ogg",
+    "TA006slow_piston.ogg"
+   ],
+   "display": {
+    "scale": 0.8
+   },
+   "evidence": [
+    {
+     "source": "模型目录名",
+     "detail": "k09_tane_ani（tane = 種付け 种付）"
+    },
+    {
+     "source": "model_info.notes",
+     "detail": "model.json motions[].sound 原声保留"
+    }
+   ],
+   "confidence": "medium",
+   "opaqueFullFrame": true,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 初冬暖阳R(巴比伦汉化组) / 初冬暖阳R 女主"
+  },
+  "lib-tyrano-ga9o2l": {
+   "modelId": "lib-tyrano-ga9o2l",
+   "modelDirName": "K_danmen",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "kind": "auxiliary",
+   "sceneLabel": "剖面图（内部视角 · 辅助）",
+   "category": "辅助",
+   "description": "游戏内剖面/内部视角**辅助 Live2D**（不是人物立绘）：scenario 用 [live2d_new name=\"K_danmen\" width=520 height=520] 在 正常位/対面/種付け 等分支叠加显示，用于展示插入/内部视角。",
+   "whenToUse": "仅当 NSFW 开启且用户明确要求「剖面/断面图/内部视角」时临时启用，用后应切回人物立绘；普通对话、随机动作、默认桌宠都不使用。",
+   "nsfwOnly": true,
+   "keywords": [
+    "剖面",
+    "断面",
+    "剖面图",
+    "内部视角",
+    "断面图",
+    "danmen",
+    "辅助"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [],
+   "display": {
+    "scale": 0.6
+   },
+   "evidence": [
+    {
+     "source": "scenario:scene1.ks:35",
+     "detail": "[jump target=\"*正常位\"] … *正常位 … [live2d_new name=\"K_danmen\"]"
+    },
+    {
+     "source": "scenario:scene1.ks labels",
+     "detail": "正常位 / 対面 / 種付け"
+    },
+    {
+     "source": "模型目录名",
+     "detail": "K_danmen（断面/剖面）"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 初冬暖阳R(巴比伦汉化组) / 初冬暖阳R 女主"
+  },
+  "lib-tyrano-1xflikk": {
+   "modelId": "lib-tyrano-1xflikk",
+   "modelDirName": "R02_danmen",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "kind": "auxiliary",
+   "sceneLabel": "剖面图（内部视角 · 辅助）",
+   "category": "辅助",
+   "description": "游戏内剖面/内部视角**辅助 Live2D**（不是人物立绘）：scenario 在 R05/R06/R08/R09 中 [live2d_new name=\"R02_danmen\" width=520 height=520]，与「断面生成回避 / 断面図非表示」标签配合，只用于内部视角展示。",
+   "whenToUse": "仅当 NSFW 开启且用户明确要求「剖面/断面图/内部视角」时临时启用，用后切回人物立绘；普通对话、随机动作、默认桌宠都不使用。",
+   "nsfwOnly": true,
+   "keywords": [
+    "剖面",
+    "断面",
+    "剖面图",
+    "内部视角",
+    "断面图",
+    "danmen",
+    "辅助"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [],
+   "display": {
+    "scale": 0.6
+   },
+   "evidence": [
+    {
+     "source": "scenario:R05_seijoui.ks:19",
+     "detail": "[live2d_new name=\"R02_danmen\"]；R06/R08 有 *断面生成回避 / *断面図非表示"
+    },
+    {
+     "source": "模型目录名",
+     "detail": "R02_danmen（断面/剖面）"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 处女前辈想要做爱!～闷骚女友的幸福初体验～ / 处女前辈 女主"
+  },
+  "lib-tyrano-qrlonq": {
+   "modelId": "lib-tyrano-qrlonq",
+   "modelDirName": "R03_cushion_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "kind": "character",
+   "sceneLabel": "抱枕场景（クッション）",
+   "category": "亲密",
+   "description": "亲密场景模型：角色与抱枕（クッション）的互动动画（Cubism2，44 个动作 / 43 段原声）；scenario 在 *生成回避 分支 [live2d_new name=\"R03_cushion_ani\"]。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求抱枕/クッション 场景，或亲密情节需要该道具时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "抱枕",
+    "クッション",
+    "cushion"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "CSILENT.ogg",
+    "C001.ogg",
+    "C001.ogg",
+    "CSILENT.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:R01_opening.ks:658",
+     "detail": "*生成回避 … [live2d_new name=\"R03_cushion_ani\"]"
+    },
+    {
+     "source": "模型目录名",
+     "detail": "R03_cushion_ani（cushion = クッション 抱枕）"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 处女前辈想要做爱!～闷骚女友的幸福初体验～ / 处女前辈 女主"
+  },
+  "lib-tyrano-1wnbj68": {
+   "modelId": "lib-tyrano-1wnbj68",
+   "modelDirName": "R04_onabare_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "kind": "character",
+   "sceneLabel": "自慰场景（オナバレ）",
+   "category": "亲密",
+   "description": "亲密场景模型：自慰（オナバレ）场景动画（33 动作 / 33 原声）；scenario 文件 R04_onabare.ks 标签 *オナバレ回想 / *オナバレスタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求自慰/オナバレ 场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "自慰",
+    "オナバレ",
+    "onabare"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "G001.ogg",
+    "G001.ogg",
+    "G002.ogg",
+    "GSILENT.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:R04_onabare.ks:14",
+     "detail": "*オナバレ回想 / *オナバレスタート"
+    },
+    {
+     "source": "模型目录名",
+     "detail": "R04_onabare_ani（onabare = オナバレ 自慰被看到）"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 处女前辈想要做爱!～闷骚女友的幸福初体验～ / 处女前辈 女主"
+  },
+  "lib-tyrano-dqu6wp": {
+   "modelId": "lib-tyrano-dqu6wp",
+   "modelDirName": "R05_seijoui_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "kind": "character",
+   "sceneLabel": "正常位场景（正常位）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：正常位动画（32 动作 / 32 原声）；scenario 文件 R05_seijoui.ks 标签 *正常位回想 / *正常位スタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求正常位场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "正常位",
+    "seijoui"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "S001.ogg",
+    "S001.ogg",
+    "SSILENT.ogg",
+    "SSILENT.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:R05_seijoui.ks:14",
+     "detail": "*正常位回想 / *正常位スタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 处女前辈想要做爱!～闷骚女友的幸福初体验～ / 处女前辈 女主"
+  },
+  "lib-tyrano-1tjfds9": {
+   "modelId": "lib-tyrano-1tjfds9",
+   "modelDirName": "R06_kijoui_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "kind": "character",
+   "sceneLabel": "骑乘位场景（騎乗位）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：骑乘位动画（27 动作 / 26 原声）；scenario 文件 R06_kijoui.ks 标签 *騎乗位回想 / *騎乗位スタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求骑乘位/騎乗位场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "骑乘位",
+    "騎乗位",
+    "kijoui"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "K001.ogg",
+    "K001.ogg",
+    "KSILENT.ogg",
+    "K003.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:R06_kijoui.ks:17",
+     "detail": "*騎乗位回想 / *騎乗位スタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 处女前辈想要做爱!～闷骚女友的幸福初体验～ / 处女前辈 女主"
+  },
+  "lib-tyrano-k84daf": {
+   "modelId": "lib-tyrano-k84daf",
+   "modelDirName": "R07_paizuri_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "kind": "character",
+   "sceneLabel": "乳交场景（パイズリ）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：乳交动画（25 动作 / 25 原声）；scenario 文件 R07_paizuri.ks 标签 *パイズリ回想 / *パイズリスタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求乳交/パイズリ场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "乳交",
+    "パイズリ",
+    "paizuri"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "H001.ogg",
+    "H001.ogg",
+    "HSILENT.ogg",
+    "H003.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:R07_paizuri.ks:14",
+     "detail": "*パイズリ回想 / *パイズリスタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 处女前辈想要做爱!～闷骚女友的幸福初体验～ / 处女前辈 女主"
+  },
+  "lib-tyrano-11txrtb": {
+   "modelId": "lib-tyrano-11txrtb",
+   "modelDirName": "R08_kouhai_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "kind": "character",
+   "sceneLabel": "后背位场景（後背位）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：后背位动画（29 动作 / 29 原声）；scenario 文件 R08_kouhai.ks 标签 *後背位回想 / *後背位スタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求后位/後背位场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "后位",
+    "后背位",
+    "後背位",
+    "kouhai"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "B001.ogg",
+    "B001.ogg",
+    "BSILENT.ogg",
+    "BSILENT.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:R08_kouhai.ks:14",
+     "detail": "*後背位回想 / *後背位スタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 处女前辈想要做爱!～闷骚女友的幸福初体验～ / 处女前辈 女主"
+  },
+  "lib-tyrano-11lav7d": {
+   "modelId": "lib-tyrano-11lav7d",
+   "modelDirName": "R09_taimen_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "kind": "character",
+   "sceneLabel": "对面位场景（対面）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：对面位动画（34 动作 / 34 原声）；scenario 文件 R09_taimen.ks 标签 *対面回想 / *対面スタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求对面位/対面场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "对面位",
+    "対面",
+    "taimen"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "T001.ogg",
+    "T001.ogg",
+    "TSILENT.ogg",
+    "TSILENT.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:R09_taimen.ks:14",
+     "detail": "*対面回想 / *対面スタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 处女前辈想要做爱!～闷骚女友的幸福初体验～ / 处女前辈 女主"
+  },
+  "lib-tyrano-1k9ng57": {
+   "modelId": "lib-tyrano-1k9ng57",
+   "modelDirName": "M01_danmen",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "auxiliary",
+   "sceneLabel": "剖面图（内部视角 · 辅助）",
+   "category": "辅助",
+   "description": "游戏内剖面/内部视角**辅助 Live2D**（不是人物立绘）：scenario 在 M04/M05/M08 等场景中 [live2d_new model_id=\"M01_danmen\" idle=\"Idle\"]，并与「断面図非表示」配合。",
+   "whenToUse": "仅当 NSFW 开启且用户明确要求「剖面/断面图/内部视角」时临时启用，用后切回人物立绘；普通对话、随机动作、默认桌宠都不使用。",
+   "nsfwOnly": true,
+   "keywords": [
+    "剖面",
+    "断面",
+    "剖面图",
+    "内部视角",
+    "断面图",
+    "danmen",
+    "辅助"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "B002_start_idle.ogg",
+    "B003_sounyu.ogg",
+    "B004_slow_LOOP.ogg",
+    "B005_slow_talk.ogg"
+   ],
+   "display": {
+    "scale": 0.6
+   },
+   "evidence": [
+    {
+     "source": "scenario:M04_seijoui.ks:27",
+     "detail": "[live2d_show M04_seijoui] + [live2d_new model_id=\"M01_danmen\"]"
+    },
+    {
+     "source": "scenario:M08_sokui.ks:27",
+     "detail": "*断面図非表示 分支与 M01_danmen 配合"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  },
+  "lib-tyrano-11xfcbq": {
+   "modelId": "lib-tyrano-11xfcbq",
+   "modelDirName": "M02_tachie_ani",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "character",
+   "sceneLabel": "立绘 · 日常对话",
+   "category": "日常",
+   "description": "雌小鬼淫魔! 女主角的日常立绘（Cubism3；335 个动作 / 159 段原声；含 169 个动作组）。scenario 多处用 [live2d_new model_id=\"M02_tachie_ani\"] 作为对话立绘。",
+   "whenToUse": "日常闲聊、对话、情绪回应时优先使用；是该游戏的默认角色模型。",
+   "nsfwOnly": false,
+   "keywords": [
+    "立绘",
+    "日常",
+    "对话",
+    "m02",
+    "女主"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Tr2_071_リバーブ.ogg",
+    "Tr2_021リバーブ.ogg",
+    "Tr2_001さて。ほきゅー完了♪満足満足ー♡.ogg",
+    "Tr2_002ほら！なにグッタリしてんの。魔力補給も終わったんだからミリィと遊ぶの。ゲーム機だして！.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:M02_opening.ks:7",
+     "detail": "*会話 … [live2d_new model_id=\"M02_tachie_ani\" idle=\"Op0000\"]"
+    },
+    {
+     "source": "scenario:M02_talk.ks:137",
+     "detail": "M02_tachie_ani 立绘 + 跳转 M06_kiss 场景"
+    },
+    {
+     "source": "links.json",
+     "detail": "159 条动作↔原声"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  },
+  "lib-tyrano-iqbakt": {
+   "modelId": "lib-tyrano-iqbakt",
+   "modelDirName": "M03_tekoki",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "character",
+   "sceneLabel": "手交场景（手コキ）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：手交（手コキ）动画（16 动作 / 13 原声）；scenario 文件 M03_tekoki.ks 标签 *手コキ回想 / *手コキスタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求手交/手コキ场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "手交",
+    "手コキ",
+    "tekoki"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "T001_start.ogg",
+    "T003_to_tekoki.ogg",
+    "T004_tekoki_LOOP.ogg",
+    "T005_tekoki_talk.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:M03_tekoki.ks",
+     "detail": "*手コキ回想 / *手コキスタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  },
+  "lib-tyrano-1n9c0fz": {
+   "modelId": "lib-tyrano-1n9c0fz",
+   "modelDirName": "M04_seijoui",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "character",
+   "sceneLabel": "正常位场景（正常位）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：正常位动画（19 动作 / 15 原声）；scenario 文件 M04_seijoui.ks 标签 *正常位回想 / *正常位スタート（含 *断面図非表示）。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求正常位场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "正常位",
+    "seijoui"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "S001_start.ogg",
+    "S002_sounyu_idle.ogg",
+    "S003_sounyu.ogg",
+    "S005_sounyu_to_slow.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:M04_seijoui.ks",
+     "detail": "*正常位回想 / *正常位スタート / *断面図非表示"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  },
+  "lib-tyrano-z8fowo": {
+   "modelId": "lib-tyrano-z8fowo",
+   "modelDirName": "M05_neback",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "character",
+   "sceneLabel": "寝バック场景（卧姿后入）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：寝バック（卧姿后入）动画（15 动作 / 13 原声）；scenario 文件 M05_neback.ks 标签 *寝バック回想 / *寝バックスタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求卧姿后入/寝バック 场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "寝バック",
+    "卧姿后入",
+    "neback"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "N001_start.ogg",
+    "N003_sounyu.ogg",
+    "N004_slow_LOOP.ogg",
+    "N005_slow_talk.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:M05_neback.ks",
+     "detail": "*寝バック回想 / *寝バックスタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  },
+  "lib-tyrano-xsxm4b": {
+   "modelId": "lib-tyrano-xsxm4b",
+   "modelDirName": "M06_kiss",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "character",
+   "sceneLabel": "接吻场景（キス）",
+   "category": "亲密",
+   "description": "亲密场景模型：接吻（キス）动画（21 动作 / 18 原声）；scenario 文件 M06_kiss.ks 标签 *キス回想 / *キススタート（从 M02_talk.ks 跳转）。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求接吻/キス 场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "接吻",
+    "キス",
+    "kiss"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "K001_start.ogg",
+    "K002_kiss_LOOP.ogg",
+    "K003_kiss_to_kuru.ogg",
+    "K004_bero_LOOP.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:M02_talk.ks:137",
+     "detail": "[jump storage=\"M06_kiss.ks\" target=\"*キス回想\"]"
+    },
+    {
+     "source": "scenario:M06_kiss.ks",
+     "detail": "*キス回想 / *キススタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  },
+  "lib-tyrano-1u0blpo": {
+   "modelId": "lib-tyrano-1u0blpo",
+   "modelDirName": "M07_fera",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "character",
+   "sceneLabel": "口交场景（フェラ）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：口交（フェラ）动画（16 动作 / 14 原声）；scenario 文件 M07_fera.ks 标签 *フェラ回想 / *フェラスタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求口交/フェラ 场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "口交",
+    "フェラ",
+    "fera"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "F001_start.ogg",
+    "F003_to_pero.ogg",
+    "F004_pero_LOOP.ogg",
+    "F005_pero_talk.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:M07_fera.ks",
+     "detail": "*フェラ回想 / *フェラスタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  },
+  "lib-tyrano-1a5ci2c": {
+   "modelId": "lib-tyrano-1a5ci2c",
+   "modelDirName": "M08_sokui",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "character",
+   "sceneLabel": "侧位场景（側位）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：侧位（側位）动画（16 动作 / 14 原声）；scenario 文件 M08_sokui.ks 标签 *側位回想 / *側位スタート（含 *断面図非表示）。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求侧位/側位 场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "侧位",
+    "側位",
+    "sokui"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "Y001_start.ogg",
+    "Y003_sounyu.ogg",
+    "Y004_slow_LOOP.ogg",
+    "Y005_slow_talk.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:M08_sokui.ks",
+     "detail": "*側位回想 / *側位スタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  },
+  "lib-tyrano-1uau3bf": {
+   "modelId": "lib-tyrano-1uau3bf",
+   "modelDirName": "M09_kouhai",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "character",
+   "sceneLabel": "后背位场景（後背位）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：后背位（後背位）动画（14 动作 / 13 原声）；scenario 文件 M09_kouhai.ks 标签 *後背位回想 / *後背位スタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求后位/後背位 场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "后位",
+    "后背位",
+    "後背位",
+    "kouhai"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "B001_start.ogg",
+    "B002_start_idle.ogg",
+    "B003_sounyu.ogg",
+    "B004_slow_LOOP.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:M09_kouhai.ks",
+     "detail": "*後背位回想 / *後背位スタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  },
+  "lib-tyrano-1hfsfcq": {
+   "modelId": "lib-tyrano-1hfsfcq",
+   "modelDirName": "M10_tane",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "kind": "character",
+   "sceneLabel": "种付·中出场景（種付け）",
+   "category": "亲密",
+   "description": "亲密行为场景模型：種付け（中出）动画（14 动作 / 12 原声）；scenario 文件 M10_tane.ks 标签 *種付け回想 / *種付けスタート。",
+   "whenToUse": "仅当 NSFW 开启、用户明确要求中出/種付け 场景时切换。",
+   "nsfwOnly": true,
+   "keywords": [
+    "种付",
+    "種付け",
+    "中出",
+    "tane"
+   ],
+   "defaultScene": "idle",
+   "representativeMotions": [],
+   "soundExamples": [
+    "P001_start.ogg",
+    "P003_sounyu.ogg",
+    "P004_slow_LOOP.ogg",
+    "P005_slow_talk.ogg"
+   ],
+   "display": {
+    "scale": null
+   },
+   "evidence": [
+    {
+     "source": "scenario:M10_tane.ks",
+     "detail": "*種付け回想 / *種付けスタート"
+    }
+   ],
+   "confidence": "high",
+   "opaqueFullFrame": false,
+   "experimental": false,
+   "group": "文件夹2 · Tyrano / 雌小鬼淫魔! / 雌小鬼 女主"
+  }
+ },
+ "dirIndex": {
+  "tyrano|初冬暖阳R(巴比伦汉化组)|tachie_ani": "tachie-ani",
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～|R01_tachie_ani": "r01-tachie-ani",
+  "ffhouse|お姉ちゃんには内緒ですよ|Midori": "lib-ffhouse-1avyyun",
+  "ffhouse|かよちゃんとの特別補導|a1": "lib-ffhouse-z7yabk",
+  "ffhouse|かよちゃんとの特別補導|a2": "lib-ffhouse-101x3eh",
+  "ffhouse|かよちゃんとの特別補導|a3": "lib-ffhouse-zrxhpi",
+  "ffhouse|オナホ妖精ちゃん|main1": "lib-ffhouse-1b5zryg",
+  "ffhouse|コハルとの放課後個別指導|Koharu0": "lib-ffhouse-m1cxhc",
+  "ffhouse|コハルとの放課後個別指導2|koharu2": "lib-ffhouse-1lzip3y",
+  "ffhouse|リルカの魔術ショーにようこそ!|CG1": "lib-ffhouse-t8dx84",
+  "ffhouse|リルカの魔術ショーにようこそ!|CG2": "lib-ffhouse-u2cqb1",
+  "ffhouse|リルカの魔術ショーにようこそ!|CG3": "lib-ffhouse-tsd4m2",
+  "ffhouse|リルカの魔術ショーにようこそ!|CG4": "lib-ffhouse-sef457",
+  "ffhouse|リルカの魔術ショーにようこそ!|CG6": "lib-ffhouse-syebj5",
+  "ffhouse|リルカの魔術ショーにようこそ!|CGstand": "lib-ffhouse-gt9aej",
+  "ffhouse|性処理専用ペット ねずみちゃん|main": "lib-ffhouse-bik0qa",
+  "ffhouse|猫メイド、集合！|a1": "lib-ffhouse-xi54tt",
+  "ffhouse|猫メイド、集合！|a2": "lib-ffhouse-wo6bqw",
+  "ffhouse|猫メイド、集合！|a3": "lib-ffhouse-wy5xfv",
+  "ffhouse|猫メイド、集合！|a4": "lib-ffhouse-yc3xwq",
+  "ffhouse|甘えんぼな妹と二人きりいちゃラブ性活|CG1": "lib-ffhouse-ywyqhz",
+  "ffhouse|甘えんぼな妹と二人きりいちゃラブ性活|CG2": "lib-ffhouse-z6yc6y",
+  "ffhouse|甘えんぼな妹と二人きりいちゃラブ性活|CG3": "lib-ffhouse-zgxxvx",
+  "ffhouse|甘えんぼな妹と二人きりいちゃラブ性活|CG4": "lib-ffhouse-xj0q14",
+  "ffhouse|甘えんぼな妹と二人きりいちゃラブ性活|CG5": "lib-ffhouse-xt0bq3",
+  "ffhouse|甘えんぼな妹と二人きりいちゃラブ性活|CG6": "lib-ffhouse-y2zxf2",
+  "ffhouse|甘えんぼな妹と二人きりいちゃラブ性活|stand": "lib-ffhouse-19cv6py",
+  "ffhouse|私の猫メイド vol.1|main": "lib-ffhouse-5idupb",
+  "ffhouse|私の猫メイド vol.1.5|EBowjob": "lib-ffhouse-2wvcrv",
+  "ffhouse|私の猫メイド Vol.2|sence2": "lib-ffhouse-o33h9h",
+  "ffhouse|私の猫メイド Vol.2|sence3": "lib-ffhouse-nt3vki",
+  "ffhouse|私の猫メイド Vol.2|sence4": "lib-ffhouse-mf5v3n",
+  "ffhouse|私の猫メイド Vol.2|sence6SP": "lib-ffhouse-14qw8q2",
+  "ffhouse|私の猫メイド Vol.3|L5a1": "lib-ffhouse-1ox2myl",
+  "ffhouse|私の猫メイド Vol.3|L5a2": "lib-ffhouse-1o33tvo",
+  "ffhouse|私の猫メイド Vol.3|L5a3": "lib-ffhouse-1od3fkn",
+  "ffhouse|風紀委員長の裏仕事|Hina2": "lib-ffhouse-1wlg13f",
+  "tyrano|初冬暖阳R(巴比伦汉化组)|k03_tekoki_ani": "lib-tyrano-120nbqr",
+  "tyrano|初冬暖阳R(巴比伦汉化组)|k04_kijoui_ani": "lib-tyrano-13cmx1o",
+  "tyrano|初冬暖阳R(巴比伦汉化组)|k05_seijoui_ani": "lib-tyrano-6batbg",
+  "tyrano|初冬暖阳R(巴比伦汉化组)|k06_paizuri_ani": "lib-tyrano-ds9bol",
+  "tyrano|初冬暖阳R(巴比伦汉化组)|k07_kouhai_ani": "lib-tyrano-1xjrmxz",
+  "tyrano|初冬暖阳R(巴比伦汉化组)|k08_taimen_ani": "lib-tyrano-ep9jwz",
+  "tyrano|初冬暖阳R(巴比伦汉化组)|k09_tane_ani": "lib-tyrano-1190u8a",
+  "tyrano|初冬暖阳R(巴比伦汉化组)|K_danmen": "lib-tyrano-ga9o2l",
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～|R02_danmen": "lib-tyrano-1xflikk",
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～|R03_cushion_ani": "lib-tyrano-qrlonq",
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～|R04_onabare_ani": "lib-tyrano-1wnbj68",
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～|R05_seijoui_ani": "lib-tyrano-dqu6wp",
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～|R06_kijoui_ani": "lib-tyrano-1tjfds9",
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～|R07_paizuri_ani": "lib-tyrano-k84daf",
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～|R08_kouhai_ani": "lib-tyrano-11txrtb",
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～|R09_taimen_ani": "lib-tyrano-11lav7d",
+  "tyrano|雌小鬼淫魔!|M01_danmen": "lib-tyrano-1k9ng57",
+  "tyrano|雌小鬼淫魔!|M02_tachie_ani": "lib-tyrano-11xfcbq",
+  "tyrano|雌小鬼淫魔!|M03_tekoki": "lib-tyrano-iqbakt",
+  "tyrano|雌小鬼淫魔!|M04_seijoui": "lib-tyrano-1n9c0fz",
+  "tyrano|雌小鬼淫魔!|M05_neback": "lib-tyrano-z8fowo",
+  "tyrano|雌小鬼淫魔!|M06_kiss": "lib-tyrano-xsxm4b",
+  "tyrano|雌小鬼淫魔!|M07_fera": "lib-tyrano-1u0blpo",
+  "tyrano|雌小鬼淫魔!|M08_sokui": "lib-tyrano-1a5ci2c",
+  "tyrano|雌小鬼淫魔!|M09_kouhai": "lib-tyrano-1uau3bf",
+  "tyrano|雌小鬼淫魔!|M10_tane": "lib-tyrano-1hfsfcq"
+ },
+ "games": {
+  "tyrano|初冬暖阳R(巴比伦汉化组)": {
+   "key": "tyrano|初冬暖阳R(巴比伦汉化组)",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "初冬暖阳R(巴比伦汉化组)",
+   "label": "初冬暖阳R(巴比伦汉化组)",
+   "character": "初冬暖阳R 女主",
+   "modelIds": [
+    "tachie-ani",
+    "lib-tyrano-120nbqr",
+    "lib-tyrano-13cmx1o",
+    "lib-tyrano-6batbg",
+    "lib-tyrano-ds9bol",
+    "lib-tyrano-1xjrmxz",
+    "lib-tyrano-ep9jwz",
+    "lib-tyrano-1190u8a",
+    "lib-tyrano-ga9o2l"
+   ]
+  },
+  "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～": {
+   "key": "tyrano|处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "label": "处女前辈想要做爱!～闷骚女友的幸福初体验～",
+   "character": "处女前辈 女主",
+   "modelIds": [
+    "r01-tachie-ani",
+    "lib-tyrano-1xflikk",
+    "lib-tyrano-qrlonq",
+    "lib-tyrano-1wnbj68",
+    "lib-tyrano-dqu6wp",
+    "lib-tyrano-1tjfds9",
+    "lib-tyrano-k84daf",
+    "lib-tyrano-11txrtb",
+    "lib-tyrano-11lav7d"
+   ]
+  },
+  "ffhouse|お姉ちゃんには内緒ですよ": {
+   "key": "ffhouse|お姉ちゃんには内緒ですよ",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "お姉ちゃんには内緒ですよ",
+   "label": "お姉ちゃんには内緒ですよ",
+   "character": "お姉ちゃんには内緒ですよ",
+   "modelIds": [
+    "lib-ffhouse-1avyyun"
+   ]
+  },
+  "ffhouse|かよちゃんとの特別補導": {
+   "key": "ffhouse|かよちゃんとの特別補導",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "かよちゃんとの特別補導",
+   "label": "かよちゃんとの特別補導",
+   "character": "かよちゃんとの特別補導",
+   "modelIds": [
+    "lib-ffhouse-z7yabk",
+    "lib-ffhouse-101x3eh",
+    "lib-ffhouse-zrxhpi"
+   ]
+  },
+  "ffhouse|オナホ妖精ちゃん": {
+   "key": "ffhouse|オナホ妖精ちゃん",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "オナホ妖精ちゃん",
+   "label": "オナホ妖精ちゃん",
+   "character": "オナホ妖精ちゃん",
+   "modelIds": [
+    "lib-ffhouse-1b5zryg"
+   ]
+  },
+  "ffhouse|コハルとの放課後個別指導": {
+   "key": "ffhouse|コハルとの放課後個別指導",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "コハルとの放課後個別指導",
+   "label": "コハルとの放課後個別指導",
+   "character": "コハルとの放課後個別指導",
+   "modelIds": [
+    "lib-ffhouse-m1cxhc"
+   ]
+  },
+  "ffhouse|コハルとの放課後個別指導2": {
+   "key": "ffhouse|コハルとの放課後個別指導2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "コハルとの放課後個別指導2",
+   "label": "コハルとの放課後個別指導2",
+   "character": "コハルとの放課後個別指導2",
+   "modelIds": [
+    "lib-ffhouse-1lzip3y"
+   ]
+  },
+  "ffhouse|リルカの魔術ショーにようこそ!": {
+   "key": "ffhouse|リルカの魔術ショーにようこそ!",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "リルカの魔術ショーにようこそ!",
+   "label": "リルカの魔術ショーにようこそ!",
+   "character": "リルカの魔術ショーにようこそ!",
+   "modelIds": [
+    "lib-ffhouse-t8dx84",
+    "lib-ffhouse-u2cqb1",
+    "lib-ffhouse-tsd4m2",
+    "lib-ffhouse-sef457",
+    "lib-ffhouse-syebj5",
+    "lib-ffhouse-gt9aej"
+   ]
+  },
+  "ffhouse|性処理専用ペット ねずみちゃん": {
+   "key": "ffhouse|性処理専用ペット ねずみちゃん",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "性処理専用ペット ねずみちゃん",
+   "label": "性処理専用ペット ねずみちゃん",
+   "character": "性処理専用ペット ねずみちゃん",
+   "modelIds": [
+    "lib-ffhouse-bik0qa"
+   ]
+  },
+  "ffhouse|猫メイド、集合！": {
+   "key": "ffhouse|猫メイド、集合！",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "猫メイド、集合！",
+   "label": "猫メイド、集合！",
+   "character": "猫メイド、集合！",
+   "modelIds": [
+    "lib-ffhouse-xi54tt",
+    "lib-ffhouse-wo6bqw",
+    "lib-ffhouse-wy5xfv",
+    "lib-ffhouse-yc3xwq"
+   ]
+  },
+  "ffhouse|甘えんぼな妹と二人きりいちゃラブ性活": {
+   "key": "ffhouse|甘えんぼな妹と二人きりいちゃラブ性活",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "label": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "character": "甘えんぼな妹と二人きりいちゃラブ性活",
+   "modelIds": [
+    "lib-ffhouse-ywyqhz",
+    "lib-ffhouse-z6yc6y",
+    "lib-ffhouse-zgxxvx",
+    "lib-ffhouse-xj0q14",
+    "lib-ffhouse-xt0bq3",
+    "lib-ffhouse-y2zxf2",
+    "lib-ffhouse-19cv6py"
+   ]
+  },
+  "ffhouse|私の猫メイド vol.1": {
+   "key": "ffhouse|私の猫メイド vol.1",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド vol.1",
+   "label": "私の猫メイド vol.1",
+   "character": "私の猫メイド vol.1",
+   "modelIds": [
+    "lib-ffhouse-5idupb"
+   ]
+  },
+  "ffhouse|私の猫メイド vol.1.5": {
+   "key": "ffhouse|私の猫メイド vol.1.5",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド vol.1.5",
+   "label": "私の猫メイド vol.1.5",
+   "character": "私の猫メイド vol.1.5",
+   "modelIds": [
+    "lib-ffhouse-2wvcrv"
+   ]
+  },
+  "ffhouse|私の猫メイド Vol.2": {
+   "key": "ffhouse|私の猫メイド Vol.2",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド Vol.2",
+   "label": "私の猫メイド Vol.2",
+   "character": "私の猫メイド Vol.2",
+   "modelIds": [
+    "lib-ffhouse-o33h9h",
+    "lib-ffhouse-nt3vki",
+    "lib-ffhouse-mf5v3n",
+    "lib-ffhouse-14qw8q2"
+   ]
+  },
+  "ffhouse|私の猫メイド Vol.3": {
+   "key": "ffhouse|私の猫メイド Vol.3",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "私の猫メイド Vol.3",
+   "label": "私の猫メイド Vol.3",
+   "character": "私の猫メイド Vol.3",
+   "modelIds": [
+    "lib-ffhouse-1ox2myl",
+    "lib-ffhouse-1o33tvo",
+    "lib-ffhouse-1od3fkn"
+   ]
+  },
+  "ffhouse|風紀委員長の裏仕事": {
+   "key": "ffhouse|風紀委員長の裏仕事",
+   "bundle": "ffhouse",
+   "bundleLabel": "文件夹1 · FFhouse",
+   "game": "風紀委員長の裏仕事",
+   "label": "風紀委員長の裏仕事",
+   "character": "風紀委員長の裏仕事",
+   "modelIds": [
+    "lib-ffhouse-1wlg13f"
+   ]
+  },
+  "tyrano|雌小鬼淫魔!": {
+   "key": "tyrano|雌小鬼淫魔!",
+   "bundle": "tyrano",
+   "bundleLabel": "文件夹2 · Tyrano",
+   "game": "雌小鬼淫魔!",
+   "label": "雌小鬼淫魔!",
+   "character": "雌小鬼 女主",
+   "modelIds": [
+    "lib-tyrano-1k9ng57",
+    "lib-tyrano-11xfcbq",
+    "lib-tyrano-iqbakt",
+    "lib-tyrano-1n9c0fz",
+    "lib-tyrano-z8fowo",
+    "lib-tyrano-xsxm4b",
+    "lib-tyrano-1u0blpo",
+    "lib-tyrano-1a5ci2c",
+    "lib-tyrano-1uau3bf",
+    "lib-tyrano-1hfsfcq"
+   ]
+  }
+ },
+ "stats": {
+  "total": 63,
+  "kinds": {
+   "character": 60,
+   "auxiliary": 3
+  },
+  "games": 17,
+  "nsfwOnly": 25,
+  "auxiliary": 3,
+  "unknown": 0
+ }
+}
